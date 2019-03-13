@@ -1,6 +1,14 @@
 import React from 'react'
+import WebFont from 'webfontloader'
+import Header from '../header/Header'
 import './App.scss'
 
-const App: React.FunctionComponent = () => <div />
+WebFont.load({
+  google: {
+    families: ['Lato:400,700,900'],
+  },
+})
+
+const App: React.FunctionComponent = () => <Header />
 
 export default App

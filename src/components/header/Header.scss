@@ -1,0 +1,12 @@
+@import '../app/Variables.scss';
+
+.header {
+  background-color: white;
+  padding: 25px 10px 27px 10px;
+  line-height: 20px;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  box-shadow: $shadow-1;
+}
