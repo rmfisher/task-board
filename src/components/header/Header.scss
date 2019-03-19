@@ -1,12 +1,47 @@
 @import '../app/Variables.scss';
 
 .header {
+  position: relative;
   background-color: white;
   padding: 25px 10px 27px 10px;
   line-height: 20px;
   font-size: 20px;
   font-weight: 700;
   display: flex;
+  align-items: center;
   justify-content: center;
   box-shadow: $shadow-1;
+
+  .avatars {
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    padding: 0 20px;
+
+    .avatar {
+      width: 35px;
+      height: 35px;
+      border: 2px solid white;
+      border-radius: 50%;
+      background-size: contain;
+      overflow: hidden;
+      margin-left: -6px;
+
+      &.bean {
+        background-image: url('../../assets/bean.png');
+      }
+
+      &.elfo {
+        background-image: url('../../assets/elfo.png');
+      }
+
+      &.sorcerio {
+        background-image: url('../../assets/sorcerio.png');
+      }
+    }
+  }
 }
