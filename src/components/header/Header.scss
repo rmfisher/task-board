@@ -27,25 +27,9 @@
     padding: 0 20px;
 
     .avatar {
-      width: 36px;
-      height: 36px;
       border: 2px solid white;
-      border-radius: 50%;
-      background-size: contain;
       overflow: hidden;
       margin-left: -8px;
-
-      &.bean {
-        background-image: url('../../assets/images/bean.png');
-      }
-
-      &.elfo {
-        background-image: url('../../assets/images/elfo.png');
-      }
-
-      &.sorcerio {
-        background-image: url('../../assets/images/sorcerio.png');
-      }
     }
   }
 }

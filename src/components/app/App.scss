@@ -34,11 +34,29 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
   background-color: white;
   border: none;
   border-radius: 4px;
   padding: 5px;
   outline: none;
   box-shadow: $shadow-2;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-size: contain;
+
+  &.bean {
+    background-image: url('../../assets/images/bean.png');
+  }
+
+  &.elfo {
+    background-image: url('../../assets/images/elfo.png');
+  }
+
+  &.sorcerio {
+    background-image: url('../../assets/images/sorcerio.png');
+  }
 }
