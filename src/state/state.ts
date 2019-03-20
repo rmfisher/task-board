@@ -54,7 +54,30 @@ export const initialState = {
         },
       ],
     },
-    { id: '2', label: 'Ready', tasks: [] },
+    {
+      id: '2',
+      label: 'Ready',
+      tasks: [
+        {
+          id: '1',
+          description: 'Clicking on "learn more" generates error message',
+          userLabel: 'sorcerio',
+          labels: [{ name: 'Medium', color: 'orange' }, { name: 'All', color: 'yellow' }],
+        },
+        {
+          id: '2',
+          description: "Login button doesn't work on mobile",
+          userLabel: 'sorcerio',
+          labels: [{ name: 'Medium', color: 'orange' }],
+        },
+        {
+          id: '3',
+          description: 'iOS app crashing',
+          userLabel: 'bean',
+          labels: [{ name: 'High', color: 'red' }],
+        },
+      ],
+    },
     { id: '3', label: 'In Progress', tasks: [] },
     { id: '4', label: 'Done', tasks: [] },
   ],
