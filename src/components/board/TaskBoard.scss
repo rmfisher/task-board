@@ -1,5 +1,27 @@
 @import '../app/Variables.scss';
 
 .task-board {
+  padding: 40px 20px;
   display: flex;
+
+  .category {
+    min-width: 100px;
+    width: 100px;
+    max-width: 400px;
+    flex-grow: 1;
+    background-color: $bg-2;
+    padding: 20px;
+    border-radius: 4px;
+
+    &:not(:first-child) {
+      margin-left: 20px;
+    }
+
+    h2 {
+      margin: 0;
+      padding-bottom: 20px;
+      font-size: 18px;
+      line-height: 18px;
+    }
+  }
 }

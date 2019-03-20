@@ -24,3 +24,21 @@ html.wf-loading {
     display: none;
   }
 }
+
+.icon .fill {
+  fill: $text-2;
+}
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px;
+  outline: none;
+  cursor: pointer;
+  box-shadow: $shadow-2;
+}

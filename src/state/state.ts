@@ -26,8 +26,8 @@ export const initialState = {
   users: [{ id: '1', label: 'sorcerio' }, { id: '2', label: 'bean' }, { id: '3', label: 'elfo' }],
   categories: [
     { id: '1', label: 'Backlog', tasks: [] },
-    { id: '1', label: 'Ready', tasks: [] },
-    { id: '1', label: 'In Progress', tasks: [] },
-    { id: '1', label: 'Done', tasks: [] },
+    { id: '2', label: 'Ready', tasks: [] },
+    { id: '3', label: 'In Progress', tasks: [] },
+    { id: '4', label: 'Done', tasks: [] },
   ],
 }

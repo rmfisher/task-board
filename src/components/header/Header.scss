@@ -3,14 +3,18 @@
 .header {
   position: relative;
   background-color: white;
-  padding: 25px 10px 27px 10px;
-  line-height: 20px;
-  font-size: 20px;
-  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: $shadow-1;
+
+  h1 {
+    margin: 0;
+    padding: 25px 10px 27px 10px;
+    line-height: 20px;
+    font-size: 20px;
+    font-weight: 700;
+  }
 
   .avatars {
     position: absolute;
@@ -32,15 +36,15 @@
       margin-left: -8px;
 
       &.bean {
-        background-image: url('../../assets/bean.png');
+        background-image: url('../../assets/images/bean.png');
       }
 
       &.elfo {
-        background-image: url('../../assets/elfo.png');
+        background-image: url('../../assets/images/elfo.png');
       }
 
       &.sorcerio {
-        background-image: url('../../assets/sorcerio.png');
+        background-image: url('../../assets/images/sorcerio.png');
       }
     }
   }
