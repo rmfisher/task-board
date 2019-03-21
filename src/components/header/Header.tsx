@@ -1,5 +1,5 @@
 import React from 'react'
-import { User } from '../../state/state'
+import { User } from '../../state/types'
 import './Header.scss'
 
 interface HeaderProps {

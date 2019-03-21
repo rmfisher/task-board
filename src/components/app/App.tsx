@@ -2,7 +2,7 @@ import React from 'react'
 import WebFont from 'webfontloader'
 import Header from '../header/Header'
 import TaskBoard from '../board/TaskBoard'
-import { initialState } from '../../state/state'
+import initialState from '../../state/initialState'
 import './App.scss'
 
 WebFont.load({

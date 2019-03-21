@@ -1,27 +1,6 @@
-export interface User {
-  id: string
-  label: string
-}
+import { State } from './types'
 
-export interface Category {
-  id: string
-  label: string
-  tasks: Task[]
-}
-
-export interface Task {
-  id: string
-  description: string
-  userLabel: string
-  labels: Label[]
-}
-
-export interface Label {
-  name: string
-  color: string
-}
-
-export const initialState = {
+const initialState: State = {
   users: [{ id: '1', label: 'sorcerio' }, { id: '2', label: 'bean' }, { id: '3', label: 'elfo' }],
   categories: [
     {
@@ -82,3 +61,5 @@ export const initialState = {
     { id: '4', label: 'Done', tasks: [] },
   ],
 }
+
+export default initialState

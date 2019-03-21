@@ -1,7 +1,7 @@
 import React from 'react'
-import { Category } from '../../state/state'
+import { Category } from '../../state/types'
 import AddIcon from '../../assets/icons/AddIcon'
-import Task from './Task'
+import DraggableTask from './DraggableTask'
 import './TaskBoard.scss'
 
 interface TaskBoardProps {
@@ -18,7 +18,7 @@ const TaskBoard: React.FunctionComponent<TaskBoardProps> = ({ categories }) => (
         </button>
         <div className="task-list">
           {c.tasks.map(t => (
-            <Task key={t.id} task={t} />
+            <DraggableTask key={t.id} task={t} />
           ))}
         </div>
       </div>
