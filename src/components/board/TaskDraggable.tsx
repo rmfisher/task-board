@@ -10,6 +10,7 @@ interface TaskDraggableProps {
   taskIndex: number
   dragged?: boolean
   onDragStart: (categoryId: string, taskId: string, taskIndex: number) => void
+  onDragEnd: () => void
 }
 
 class TaskDraggable extends React.Component<TaskDraggableProps> {
@@ -61,6 +62,7 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
   private endDrag = () => {
     this.dragInProgress = false
     this.mouseDown = false
+    this.props.onDragEnd()
   }
 }
 

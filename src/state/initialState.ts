@@ -38,19 +38,19 @@ export const initialState: State = {
       label: 'Ready',
       tasks: [
         {
-          id: '1',
+          id: '5',
           description: 'Clicking on "learn more" generates error message',
           userLabel: 'sorcerio',
           labels: [{ name: 'Medium', color: 'orange' }, { name: 'All', color: 'yellow' }],
         },
         {
-          id: '2',
+          id: '6',
           description: "Login button doesn't work on mobile",
           userLabel: 'sorcerio',
           labels: [{ name: 'Medium', color: 'orange' }],
         },
         {
-          id: '3',
+          id: '7',
           description: 'iOS app crashing',
           userLabel: 'bean',
           labels: [{ name: 'High', color: 'red' }],

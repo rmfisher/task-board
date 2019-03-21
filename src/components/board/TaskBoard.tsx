@@ -26,26 +26,19 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
               {c.tasks.map((t, i) => {
                 const dragged = this.isTaskDragged(c.id, t.id)
                 const collapsed = dragState && dragState.sourceCollapseStarted
-                return dragged ? (
-                  <React.Fragment>
-                    <div className={'placeholder' + (collapsed ? ' collapsed' : '')} />
+                return (
+                  <React.Fragment key={t.id}>
+                    {dragged && <div key="placeholder" className={'placeholder' + (collapsed ? ' collapsed' : '')} />}
                     <TaskDraggable
                       key={t.id}
                       categoryId={c.id}
                       task={t}
                       taskIndex={i}
-                      dragged
+                      dragged={dragged}
                       onDragStart={this.handleDragStart}
+                      onDragEnd={this.handleDragEnd}
                     />
                   </React.Fragment>
-                ) : (
-                  <TaskDraggable
-                    key={t.id}
-                    categoryId={c.id}
-                    task={t}
-                    taskIndex={i}
-                    onDragStart={this.handleDragStart}
-                  />
                 )
               })}
             </div>
@@ -55,7 +48,25 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
     )
   }
 
-  private handleDragStart = (categoryId: string, taskId: string, taskIndex: number) => {}
+  private handleDragStart = (categoryId: string, taskId: string, taskIndex: number) => {
+    this.setState({
+      dragState: {
+        sourceCategoryId: categoryId,
+        sourceTaskId: taskId,
+        sourceTaskIndex: taskIndex,
+        sourceCollapseStarted: false,
+        hoverExpandStarted: false,
+      },
+    })
+
+    requestAnimationFrame(() => {
+      this.setState({ dragState: { ...(this.state.dragState as DragState), sourceCollapseStarted: true } })
+    })
+  }
+
+  private handleDragEnd = () => {
+    this.setState({ dragState: undefined })
+  }
 
   private isTaskDragged = (categoryId: string, taskId: string) => {
     const { dragState } = this.state
