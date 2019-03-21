@@ -34,4 +34,13 @@
       }
     }
   }
+
+  .placeholder {
+    visibility: hidden;
+    transition: height 0.2s ease-out;
+  }
+
+  &.source-collapse .placeholder {
+    height: 0px !important;
+  }
 }

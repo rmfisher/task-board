@@ -12,10 +12,20 @@ interface TaskBoardState {
 class TaskBoard extends React.Component<{}, TaskBoardState> {
   public state: TaskBoardState = { categories: initialState.categories }
 
+  public componentDidUpdate(_: any, prevState: TaskBoardState) {
+    if (!prevState.dragState && this.state.dragState) {
+      requestAnimationFrame(() => {
+        this.setState({ dragState: { ...(this.state.dragState as DragState), sourceCollapseStarted: true } })
+      })
+    }
+  }
+
   public render() {
     const { categories, dragState } = this.state
+    const sourceCollapse = dragState && dragState.sourceCollapseStarted
+    const draggedTaskHeight = dragState && dragState.sourceTaskHeight + 'px'
     return (
-      <div className="task-board">
+      <div className={'task-board' + (sourceCollapse ? ' source-collapse' : '')}>
         {categories.map(c => (
           <div key={c.id} className="category">
             <h2>{c.label}</h2>
@@ -24,11 +34,14 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
             </button>
             <div className="task-list">
               {c.tasks.map((t, i) => {
-                const dragged = this.isTaskDragged(c.id, t.id)
-                const collapsed = dragState && dragState.sourceCollapseStarted
+                const dragged = dragState && c.id === dragState.sourceCategoryId && t.id === dragState.sourceTaskId
                 return (
                   <React.Fragment key={t.id}>
-                    {dragged && <div key="placeholder" className={'placeholder' + (collapsed ? ' collapsed' : '')} />}
+                    <div
+                      key="placeholder"
+                      className="placeholder"
+                      style={dragged ? { height: draggedTaskHeight } : undefined}
+                    />
                     <TaskDraggable
                       key={t.id}
                       categoryId={c.id}
@@ -41,6 +54,7 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
                   </React.Fragment>
                 )
               })}
+              <div className="end-placeholder" style={{ height: sourceCollapse ? draggedTaskHeight : '0' }} />
             </div>
           </div>
         ))}
@@ -48,29 +62,21 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
     )
   }
 
-  private handleDragStart = (categoryId: string, taskId: string, taskIndex: number) => {
+  private handleDragStart = (categoryId: string, taskId: string, taskIndex: number, currentHeight: number) => {
     this.setState({
       dragState: {
         sourceCategoryId: categoryId,
         sourceTaskId: taskId,
         sourceTaskIndex: taskIndex,
+        sourceTaskHeight: currentHeight,
         sourceCollapseStarted: false,
         hoverExpandStarted: false,
       },
-    })
-
-    requestAnimationFrame(() => {
-      this.setState({ dragState: { ...(this.state.dragState as DragState), sourceCollapseStarted: true } })
     })
   }
 
   private handleDragEnd = () => {
     this.setState({ dragState: undefined })
-  }
-
-  private isTaskDragged = (categoryId: string, taskId: string) => {
-    const { dragState } = this.state
-    return dragState && categoryId === dragState.sourceCategoryId && taskId === dragState.sourceTaskId
   }
 }
 

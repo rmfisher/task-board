@@ -60,4 +60,8 @@
       }
     }
   }
+
+  &.dragged {
+    display: none;
+  }
 }

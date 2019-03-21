@@ -32,6 +32,7 @@ export interface DragState {
   sourceCategoryId: string
   sourceTaskId: string
   sourceTaskIndex: number
+  sourceTaskHeight: number
   sourceCollapseStarted: boolean
   hoverCategoryId?: string
   hoverTaskIndex?: number

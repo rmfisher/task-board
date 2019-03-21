@@ -1,5 +1,5 @@
 import React from 'react'
-import { Task, DragState } from '../../state'
+import { Task } from '../../state'
 import TaskComponent from './Task'
 
 const DRAG_THRESHOLD = 20
@@ -9,12 +9,12 @@ interface TaskDraggableProps {
   task: Task
   taskIndex: number
   dragged?: boolean
-  onDragStart: (categoryId: string, taskId: string, taskIndex: number) => void
+  onDragStart: (categoryId: string, taskId: string, taskIndex: number, currentHeight: number) => void
   onDragEnd: () => void
 }
 
 class TaskDraggable extends React.Component<TaskDraggableProps> {
-  private rootElement: any
+  private rootElement!: HTMLDivElement
   private startX: number = 0
   private startY: number = 0
   private mouseDown: boolean = false
@@ -35,7 +35,8 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
   }
 
   public render() {
-    return <TaskComponent rootRef={e => (this.rootElement = e)} task={this.props.task} dragged={this.props.dragged} />
+    const { task, dragged } = this.props
+    return <TaskComponent task={task} dragged={dragged} rootRef={e => (this.rootElement = e as HTMLDivElement)} />
   }
 
   private handleMouseDown = (e: MouseEvent) => {
@@ -51,7 +52,12 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
 
     if (this.mouseDown && !this.dragInProgress && Math.hypot(deltaX, deltaY) > DRAG_THRESHOLD) {
       this.dragInProgress = true
-      this.props.onDragStart(this.props.categoryId, this.props.task.id, this.props.taskIndex)
+      this.props.onDragStart(
+        this.props.categoryId,
+        this.props.task.id,
+        this.props.taskIndex,
+        this.rootElement.clientHeight
+      )
     }
 
     if (this.dragInProgress) {
