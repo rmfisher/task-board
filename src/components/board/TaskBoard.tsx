@@ -10,7 +10,7 @@ interface TaskBoardState {
 }
 
 class TaskBoard extends React.Component<{}, TaskBoardState> {
-  public state = { categories: initialState.categories }
+  public state: TaskBoardState = { categories: initialState.categories }
 
   public render() {
     const { categories } = this.state
@@ -23,14 +23,34 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
               <AddIcon />
             </button>
             <div className="task-list">
-              {c.tasks.map((t, i) => (
-                <TaskDraggable key={t.id} categoryId={c.id} task={t} taskIndex={i} setDragState={() => {}} />
-              ))}
+              {c.tasks.map((t, i) => {
+                const dragged = this.isTaskDragged(c.id, t.id)
+                return (
+                  <TaskDraggable
+                    key={t.id}
+                    categoryId={c.id}
+                    task={t}
+                    taskIndex={i}
+                    dragged={dragged}
+                    onDragStart={this.handleDragStart}
+                  />
+                )
+              })}
             </div>
           </div>
         ))}
       </div>
     )
+  }
+
+  private handleDragStart = (categoryId: string, taskId: string, taskIndex: number) => {}
+
+  private isTaskDragged = (categoryId: string, taskId: string) => {
+    const { dragState } = this.state
+    if (!dragState) {
+      return false
+    }
+    return categoryId === dragState.sourceCategoryId && taskId === dragState.sourceTaskId
   }
 }
 

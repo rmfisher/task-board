@@ -8,7 +8,8 @@ interface TaskDraggableProps {
   categoryId: string
   task: Task
   taskIndex: number
-  setDragState: (dragState: DragState) => void
+  dragged: boolean
+  onDragStart: (categoryId: string, taskId: string, taskIndex: number) => void
 }
 
 class TaskDraggable extends React.Component<TaskDraggableProps> {
@@ -33,8 +34,7 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
   }
 
   public render() {
-    const { task } = this.props
-    return <TaskComponent rootRef={e => (this.rootElement = e)} task={task} />
+    return <TaskComponent rootRef={e => (this.rootElement = e)} task={this.props.task} dragged={this.props.dragged} />
   }
 
   private handleMouseDown = (e: MouseEvent) => {
@@ -50,8 +50,7 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
 
     if (this.mouseDown && !this.dragInProgress && Math.hypot(deltaX, deltaY) > DRAG_THRESHOLD) {
       this.dragInProgress = true
-      this.publishDragState(false)
-      requestAnimationFrame(() => this.publishDragState(true))
+      this.props.onDragStart(this.props.categoryId, this.props.task.id, this.props.taskIndex)
     }
 
     if (this.dragInProgress) {
@@ -62,18 +61,6 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
   private endDrag = () => {
     this.dragInProgress = false
     this.mouseDown = false
-  }
-
-  private publishDragState = (sourceCollapseStarted: boolean) => {
-    this.props.setDragState({
-      sourceCategoryId: this.props.categoryId,
-      sourceTaskId: this.props.task.id,
-      sourceTaskIndex: this.props.taskIndex,
-      sourceCollapseStarted,
-      hoverCategoryId: undefined,
-      hoverTaskIndex: undefined,
-      hoverExpandStarted: false,
-    })
   }
 }
 
