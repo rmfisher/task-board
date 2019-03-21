@@ -4,7 +4,7 @@ import './Task.scss'
 
 interface TaskProps {
   task: Task
-  dragged: boolean
+  dragged?: boolean
   rootRef: React.Ref<HTMLDivElement>
 }
 

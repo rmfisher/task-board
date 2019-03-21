@@ -8,7 +8,7 @@ interface TaskDraggableProps {
   categoryId: string
   task: Task
   taskIndex: number
-  dragged: boolean
+  dragged?: boolean
   onDragStart: (categoryId: string, taskId: string, taskIndex: number) => void
 }
 

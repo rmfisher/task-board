@@ -13,7 +13,7 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
   public state: TaskBoardState = { categories: initialState.categories }
 
   public render() {
-    const { categories } = this.state
+    const { categories, dragState } = this.state
     return (
       <div className="task-board">
         {categories.map(c => (
@@ -25,13 +25,25 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
             <div className="task-list">
               {c.tasks.map((t, i) => {
                 const dragged = this.isTaskDragged(c.id, t.id)
-                return (
+                const collapsed = dragState && dragState.sourceCollapseStarted
+                return dragged ? (
+                  <React.Fragment>
+                    <div className={'placeholder' + (collapsed ? ' collapsed' : '')} />
+                    <TaskDraggable
+                      key={t.id}
+                      categoryId={c.id}
+                      task={t}
+                      taskIndex={i}
+                      dragged
+                      onDragStart={this.handleDragStart}
+                    />
+                  </React.Fragment>
+                ) : (
                   <TaskDraggable
                     key={t.id}
                     categoryId={c.id}
                     task={t}
                     taskIndex={i}
-                    dragged={dragged}
                     onDragStart={this.handleDragStart}
                   />
                 )
@@ -47,10 +59,7 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
 
   private isTaskDragged = (categoryId: string, taskId: string) => {
     const { dragState } = this.state
-    if (!dragState) {
-      return false
-    }
-    return categoryId === dragState.sourceCategoryId && taskId === dragState.sourceTaskId
+    return dragState && categoryId === dragState.sourceCategoryId && taskId === dragState.sourceTaskId
   }
 }
 
