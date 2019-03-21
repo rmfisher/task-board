@@ -1,6 +1,6 @@
-import { State } from './types'
+import { State } from '.'
 
-const initialState: State = {
+export const initialState: State = {
   users: [{ id: '1', label: 'sorcerio' }, { id: '2', label: 'bean' }, { id: '3', label: 'elfo' }],
   categories: [
     {
@@ -61,5 +61,3 @@ const initialState: State = {
     { id: '4', label: 'Done', tasks: [] },
   ],
 }
-
-export default initialState

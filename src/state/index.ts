@@ -1,3 +1,5 @@
+import { initialState } from './initialState'
+
 export interface State {
   users: User[]
   categories: Category[]
@@ -25,3 +27,15 @@ export interface Label {
   name: string
   color: string
 }
+
+export interface DragState {
+  sourceCategoryId: string
+  sourceTaskId: string
+  sourceTaskIndex: number
+  sourceCollapseStarted: boolean
+  hoverCategoryId?: string
+  hoverTaskIndex?: number
+  hoverExpandStarted: boolean
+}
+
+export * from './initialState'

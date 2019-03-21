@@ -2,7 +2,7 @@ import React from 'react'
 import WebFont from 'webfontloader'
 import Header from '../header/Header'
 import TaskBoard from '../board/TaskBoard'
-import initialState from '../../state/initialState'
+import { initialState } from '../../state'
 import './App.scss'
 
 WebFont.load({
@@ -14,7 +14,7 @@ WebFont.load({
 const App: React.FunctionComponent = () => (
   <React.Fragment>
     <Header users={initialState.users} />
-    <TaskBoard categories={initialState.categories} />
+    <TaskBoard />
   </React.Fragment>
 )
 

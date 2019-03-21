@@ -1,14 +1,17 @@
 import React from 'react'
-import { Task } from '../../state/types'
+import { Task, DragState } from '../../state'
 import TaskComponent from './Task'
 
 const DRAG_THRESHOLD = 20
 
-interface DraggableTaskProps {
+interface TaskDraggableProps {
+  categoryId: string
   task: Task
+  taskIndex: number
+  setDragState: (dragState: DragState) => void
 }
 
-class DraggableTask extends React.Component<DraggableTaskProps> {
+class TaskDraggable extends React.Component<TaskDraggableProps> {
   private rootElement: any
   private startX: number = 0
   private startY: number = 0
@@ -47,7 +50,10 @@ class DraggableTask extends React.Component<DraggableTaskProps> {
 
     if (this.mouseDown && !this.dragInProgress && Math.hypot(deltaX, deltaY) > DRAG_THRESHOLD) {
       this.dragInProgress = true
+      this.publishDragState(false)
+      requestAnimationFrame(() => this.publishDragState(true))
     }
+
     if (this.dragInProgress) {
       console.log(deltaX, deltaY)
     }
@@ -57,6 +63,18 @@ class DraggableTask extends React.Component<DraggableTaskProps> {
     this.dragInProgress = false
     this.mouseDown = false
   }
+
+  private publishDragState = (sourceCollapseStarted: boolean) => {
+    this.props.setDragState({
+      sourceCategoryId: this.props.categoryId,
+      sourceTaskId: this.props.task.id,
+      sourceTaskIndex: this.props.taskIndex,
+      sourceCollapseStarted,
+      hoverCategoryId: undefined,
+      hoverTaskIndex: undefined,
+      hoverExpandStarted: false,
+    })
+  }
 }
 
-export default DraggableTask
+export default TaskDraggable
