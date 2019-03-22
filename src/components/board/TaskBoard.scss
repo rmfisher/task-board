@@ -3,6 +3,8 @@
 .task-board {
   padding: 40px 20px;
   display: flex;
+  box-sizing: border-box;
+  position: relative;
 
   .category {
     min-width: 280px;
@@ -32,15 +34,13 @@
       > *:not(:first-child) {
         margin-top: 15px;
       }
+
+      > .placeholder {
+        transition: height 100ms cubic-bezier(0, 0, 0.7, 0.95);
+        &.collapsed {
+          height: 0 !important;
+        }
+      }
     }
-  }
-
-  .placeholder {
-    visibility: hidden;
-    transition: height 0.2s ease-out;
-  }
-
-  &.source-collapse .placeholder {
-    height: 0px !important;
   }
 }

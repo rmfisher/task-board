@@ -9,7 +9,20 @@ interface TaskDraggableProps {
   task: Task
   taskIndex: number
   dragged?: boolean
-  onDragStart: (categoryId: string, taskId: string, taskIndex: number, currentHeight: number) => void
+  x?: number
+  y?: number
+  width?: number
+  height?: number
+  onDragStart: (
+    categoryId: string,
+    taskId: string,
+    taskIndex: number,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) => void
+  onDrag: (x: number, y: number) => void
   onDragEnd: () => void
 }
 
@@ -17,6 +30,8 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
   private rootElement!: HTMLDivElement
   private startX: number = 0
   private startY: number = 0
+  private mouseStartX: number = 0
+  private mouseStartY: number = 0
   private mouseDown: boolean = false
   private dragInProgress: boolean = false
 
@@ -35,20 +50,32 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
   }
 
   public render() {
-    const { task, dragged } = this.props
-    return <TaskComponent task={task} dragged={dragged} rootRef={e => (this.rootElement = e as HTMLDivElement)} />
+    const { task, dragged, x, y, width, height } = this.props
+    return (
+      <TaskComponent
+        task={task}
+        dragged={dragged}
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        rootRef={e => (this.rootElement = e as HTMLDivElement)}
+      />
+    )
   }
 
   private handleMouseDown = (e: MouseEvent) => {
     e.preventDefault()
     this.mouseDown = true
-    this.startX = e.clientX
-    this.startY = e.clientY
+    this.mouseStartX = e.clientX
+    this.mouseStartY = e.clientY
+    this.startX = this.rootElement.offsetLeft
+    this.startY = this.rootElement.offsetTop
   }
 
   private handleMouseMove = (e: MouseEvent) => {
-    const deltaX = e.clientX - this.startX
-    const deltaY = e.clientY - this.startY
+    const deltaX = e.clientX - this.mouseStartX
+    const deltaY = e.clientY - this.mouseStartY
 
     if (this.mouseDown && !this.dragInProgress && Math.hypot(deltaX, deltaY) > DRAG_THRESHOLD) {
       this.dragInProgress = true
@@ -56,12 +83,15 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
         this.props.categoryId,
         this.props.task.id,
         this.props.taskIndex,
+        this.startX + deltaX,
+        this.startY + deltaY,
+        this.rootElement.clientWidth,
         this.rootElement.clientHeight
       )
     }
 
     if (this.dragInProgress) {
-      console.log(deltaX, deltaY)
+      this.props.onDrag(this.startX + deltaX, this.startY + deltaY)
     }
   }
 

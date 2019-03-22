@@ -28,15 +28,4 @@ export interface Label {
   color: string
 }
 
-export interface DragState {
-  sourceCategoryId: string
-  sourceTaskId: string
-  sourceTaskIndex: number
-  sourceTaskHeight: number
-  sourceCollapseStarted: boolean
-  hoverCategoryId?: string
-  hoverTaskIndex?: number
-  hoverExpandStarted: boolean
-}
-
 export * from './initialState'

@@ -10,6 +10,7 @@
   border-radius: 4px;
   box-shadow: $shadow-2;
   overflow: hidden;
+  box-sizing: border-box;
 
   .description {
     color: $text-1;
@@ -62,6 +63,7 @@
   }
 
   &.dragged {
-    display: none;
+    position: absolute;
+    z-index: 100;
   }
 }
