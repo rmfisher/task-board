@@ -19,6 +19,8 @@ interface TaskDraggableProps {
 }
 
 class TaskDraggable extends React.Component<TaskDraggableProps> {
+  public readonly state = { width: 0, height: 0, mouseDown: false }
+
   private rootElement!: HTMLDivElement
   private startX: number = 0
   private startY: number = 0
@@ -43,16 +45,25 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
 
   public render() {
     const { task, dragged } = this.props
-    return <TaskComponent task={task} dragged={dragged} rootRef={e => (this.rootElement = e as HTMLDivElement)} />
+    return (
+      <TaskComponent
+        task={task}
+        className={dragged ? 'dragged' : undefined}
+        rootRef={e => (this.rootElement = e as HTMLDivElement)}
+      />
+    )
   }
 
   private handleMouseDown = (e: MouseEvent) => {
-    e.preventDefault()
-    this.mouseDown = true
-    this.mouseStartX = e.clientX
-    this.mouseStartY = e.clientY
-    this.startX = this.rootElement.offsetLeft
-    this.startY = this.rootElement.offsetTop
+    if (e.button === 0) {
+      e.preventDefault()
+      this.mouseDown = true
+      this.mouseStartX = e.clientX
+      this.mouseStartY = e.clientY
+      this.startX = this.rootElement.offsetLeft
+      this.startY = this.rootElement.offsetTop
+      this.setState({ mouseDown: true })
+    }
   }
 
   private handleMouseMove = (e: MouseEvent) => {
@@ -63,6 +74,7 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
       this.dragInProgress = true
       this.rootElement.style.width = this.rootElement.clientWidth + 'px'
       this.rootElement.style.height = this.rootElement.clientHeight + 'px'
+
       this.props.onDragStart(
         this.props.task.id,
         this.props.taskIndex,

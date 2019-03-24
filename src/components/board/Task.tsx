@@ -4,15 +4,15 @@ import './Task.scss'
 
 interface TaskProps {
   task: Task
-  dragged?: boolean
+  className?: string
   rootRef: React.Ref<HTMLDivElement>
 }
 
 class TaskComponent extends React.Component<TaskProps> {
   public render() {
-    const { task, dragged, rootRef } = this.props
+    const { task, className, rootRef } = this.props
     return (
-      <div className={'task' + (dragged ? ' dragged' : '')} ref={rootRef}>
+      <div className={'task' + (className ? ' ' + className : '')} ref={rootRef}>
         <div className="description">{task.description}</div>
         <div className={'avatar ' + task.userLabel} />
         <div className="labels">

@@ -8,9 +8,10 @@
   padding: 20px;
   background-color: white;
   border-radius: 4px;
-  box-shadow: $shadow-2;
+  box-shadow: $shadow-1;
   overflow: hidden;
   box-sizing: border-box;
+  transition: box-shadow 0.2s;
 
   .description {
     color: $text-1;
@@ -64,6 +65,8 @@
 
   &.dragged {
     position: absolute;
+    margin-top: 0 !important;
     z-index: 100;
+    box-shadow: $shadow-3;
   }
 }
