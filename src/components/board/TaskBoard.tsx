@@ -4,6 +4,8 @@ import AddIcon from '../../assets/icons/AddIcon'
 import TaskDraggable from './TaskDraggable'
 import './TaskBoard.scss'
 
+const COLLAPSE_DELAY = 100
+
 interface TaskBoardState {
   categories: Category[]
   dragState?: {
@@ -23,14 +25,6 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
   public state: TaskBoardState = { categories: initialState.categories }
 
   private rootElement!: HTMLDivElement
-
-  public componentDidUpdate(_: any, prevState: TaskBoardState) {
-    if (!prevState.dragState && this.state.dragState) {
-      setTimeout(() => {
-        this.setState({ dragState: { ...(this.state.dragState as any), collapseStarted: true } })
-      }, 100)
-    }
-  }
 
   public render() {
     const { categories, dragState } = this.state
@@ -93,6 +87,10 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
         boardHeight: this.rootElement.clientHeight,
       },
     })
+
+    setTimeout(() => {
+      this.setState({ dragState: { ...(this.state.dragState as any), collapseStarted: true } })
+    }, COLLAPSE_DELAY)
   }
 
   private handleDragEnd = () => {
