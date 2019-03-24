@@ -7,17 +7,14 @@ import './TaskBoard.scss'
 interface TaskBoardState {
   categories: Category[]
   dragState?: {
-    sourceCategoryId: string
-    sourceTaskId: string
-    sourceTaskIndex: number
-    sourceCollapseStarted: boolean
-    hoverCategoryId?: string
-    hoverTaskIndex?: number
-    hoverExpandStarted: boolean
-    x: number
-    y: number
-    width: number
-    height: number
+    draggedTask: string
+    draggedTaskIndex: number
+    draggedTaskCategory: string
+    draggedTaskHeight: number
+    hoveredCategory?: string
+    hoveredIndex?: number
+    collapseStarted: boolean
+    expandStarted: boolean
     boardHeight: number
   }
 }
@@ -30,7 +27,7 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
   public componentDidUpdate(_: any, prevState: TaskBoardState) {
     if (!prevState.dragState && this.state.dragState) {
       setTimeout(() => {
-        this.setState({ dragState: { ...(this.state.dragState as any), sourceCollapseStarted: true } })
+        this.setState({ dragState: { ...(this.state.dragState as any), collapseStarted: true } })
       }, 100)
     }
   }
@@ -48,9 +45,9 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
             </button>
             <div className="task-list">
               {c.tasks.map((t, i) => {
-                const dragged = dragState && c.id === dragState.sourceCategoryId && t.id === dragState.sourceTaskId
-                const sourceCollapse = dragState && dragState.sourceCollapseStarted
-                const draggedTaskHeight = dragState && dragState.height + 'px'
+                const dragged = dragState && c.id === dragState.draggedTaskCategory && t.id === dragState.draggedTask
+                const sourceCollapse = dragState && dragState.collapseStarted
+                const draggedTaskHeight = dragState && dragState.draggedTaskHeight + 'px'
                 return (
                   <React.Fragment key={t.id}>
                     {dragged && (
@@ -66,12 +63,7 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
                       task={t}
                       taskIndex={i}
                       dragged={dragged}
-                      x={dragState && dragged ? dragState.x : undefined}
-                      y={dragState && dragged ? dragState.y : undefined}
-                      width={dragState && dragged ? dragState.width : undefined}
-                      height={dragState && dragged ? dragState.height : undefined}
                       onDragStart={this.handleDragStart}
-                      onDrag={this.handleDrag}
                       onDragEnd={this.handleDragEnd}
                     />
                   </React.Fragment>
@@ -85,32 +77,22 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
   }
 
   private handleDragStart = (
-    categoryId: string,
-    taskId: string,
-    taskIndex: number,
-    x: number,
-    y: number,
-    width: number,
-    height: number
+    draggedTask: string,
+    draggedTaskIndex: number,
+    draggedTaskCategory: string,
+    draggedTaskHeight: number
   ) => {
     this.setState({
       dragState: {
-        sourceCategoryId: categoryId,
-        sourceTaskId: taskId,
-        sourceTaskIndex: taskIndex,
-        sourceCollapseStarted: false,
-        hoverExpandStarted: false,
-        x,
-        y,
-        width,
-        height,
+        draggedTask,
+        draggedTaskIndex,
+        draggedTaskCategory,
+        draggedTaskHeight,
+        collapseStarted: false,
+        expandStarted: false,
         boardHeight: this.rootElement.clientHeight,
       },
     })
-  }
-
-  private handleDrag = (x: number, y: number) => {
-    this.setState({ dragState: { ...(this.state.dragState as any), x, y } })
   }
 
   private handleDragEnd = () => {

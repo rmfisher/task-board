@@ -2,27 +2,19 @@ import React from 'react'
 import { Task } from '../../state'
 import TaskComponent from './Task'
 
-const DRAG_THRESHOLD = 20
+const DRAG_THRESHOLD = 10
 
 interface TaskDraggableProps {
   categoryId: string
   task: Task
   taskIndex: number
   dragged?: boolean
-  x?: number
-  y?: number
-  width?: number
-  height?: number
   onDragStart: (
-    categoryId: string,
-    taskId: string,
-    taskIndex: number,
-    x: number,
-    y: number,
-    width: number,
-    height: number
+    draggedTask: string,
+    draggedTaskIndex: number,
+    draggedTaskCategory: string,
+    draggedTaskHeight: number
   ) => void
-  onDrag: (x: number, y: number) => void
   onDragEnd: () => void
 }
 
@@ -50,18 +42,8 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
   }
 
   public render() {
-    const { task, dragged, x, y, width, height } = this.props
-    return (
-      <TaskComponent
-        task={task}
-        dragged={dragged}
-        x={x}
-        y={y}
-        width={width}
-        height={height}
-        rootRef={e => (this.rootElement = e as HTMLDivElement)}
-      />
-    )
+    const { task, dragged } = this.props
+    return <TaskComponent task={task} dragged={dragged} rootRef={e => (this.rootElement = e as HTMLDivElement)} />
   }
 
   private handleMouseDown = (e: MouseEvent) => {
@@ -79,25 +61,29 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
 
     if (this.mouseDown && !this.dragInProgress && Math.hypot(deltaX, deltaY) > DRAG_THRESHOLD) {
       this.dragInProgress = true
+      this.rootElement.style.width = this.rootElement.clientWidth + 'px'
+      this.rootElement.style.height = this.rootElement.clientHeight + 'px'
       this.props.onDragStart(
-        this.props.categoryId,
         this.props.task.id,
         this.props.taskIndex,
-        this.startX + deltaX,
-        this.startY + deltaY,
-        this.rootElement.clientWidth,
+        this.props.categoryId,
         this.rootElement.clientHeight
       )
     }
 
     if (this.dragInProgress) {
-      this.props.onDrag(this.startX + deltaX, this.startY + deltaY)
+      this.rootElement.style.left = this.startX + deltaX + 'px'
+      this.rootElement.style.top = this.startY + deltaY + 'px'
     }
   }
 
   private endDrag = () => {
     this.dragInProgress = false
     this.mouseDown = false
+    this.rootElement.style.width = null
+    this.rootElement.style.height = null
+    this.rootElement.style.left = null
+    this.rootElement.style.top = null
     this.props.onDragEnd()
   }
 }
