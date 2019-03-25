@@ -75,14 +75,14 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
   private handleDragStart = (
     draggedTask: string,
     draggedTaskIndex: number,
-    draggedTaskHeight: number,
-    draggedCategoryIndex: number
+    draggedCategoryIndex: number,
+    draggedElement: HTMLDivElement
   ) => {
     this.setState({
       dragState: {
         draggedTask,
         draggedTaskIndex,
-        draggedTaskHeight,
+        draggedTaskHeight: draggedElement.clientHeight,
         draggedCategoryIndex,
         collapseStarted: false,
         expandStarted: false,
@@ -94,7 +94,7 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
       this.setState({ dragState: { ...(this.state.dragState as any), collapseStarted: true } })
     }, COLLAPSE_DELAY)
 
-    this.dragDropHelper.storeTaskLayout(this.rootElement, draggedCategoryIndex, draggedTaskIndex)
+    this.dragDropHelper.storeTaskLayout(this.rootElement, draggedElement)
   }
 
   private handleDragEnd = () => {

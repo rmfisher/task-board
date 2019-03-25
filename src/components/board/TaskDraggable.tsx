@@ -12,8 +12,8 @@ interface TaskDraggableProps {
   onDragStart: (
     draggedTask: string,
     draggedTaskIndex: number,
-    draggedTaskHeight: number,
-    draggedCategoryIndex: number
+    draggedCategoryIndex: number,
+    draggedElement: HTMLDivElement
   ) => void
   onDragEnd: () => void
 }
@@ -74,12 +74,7 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
       this.rootElement.style.width = this.rootElement.clientWidth + 'px'
       this.rootElement.style.height = this.rootElement.clientHeight + 'px'
 
-      this.props.onDragStart(
-        this.props.task.id,
-        this.props.taskIndex,
-        this.rootElement.clientHeight,
-        this.props.categoryIndex
-      )
+      this.props.onDragStart(this.props.task.id, this.props.taskIndex, this.props.categoryIndex, this.rootElement)
     }
 
     if (this.dragInProgress) {
