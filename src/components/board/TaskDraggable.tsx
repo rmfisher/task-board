@@ -15,6 +15,7 @@ interface TaskDraggableProps {
     draggedCategoryIndex: number,
     draggedElement: HTMLDivElement
   ) => void
+  onDrag: (x: number, y: number, draggedElement: HTMLDivElement) => void
   onDragEnd: () => void
 }
 
@@ -62,6 +63,8 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
       this.mouseStartY = e.clientY
       this.startX = this.rootElement.offsetLeft
       this.startY = this.rootElement.offsetTop
+    } else {
+      this.endDrag()
     }
   }
 
@@ -78,8 +81,7 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
     }
 
     if (this.dragInProgress) {
-      this.rootElement.style.left = this.startX + deltaX + 'px'
-      this.rootElement.style.top = this.startY + deltaY + 'px'
+      this.props.onDrag(this.startX + deltaX, this.startY + deltaY, this.rootElement)
     }
   }
 

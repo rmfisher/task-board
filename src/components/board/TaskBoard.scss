@@ -6,6 +6,7 @@
   box-sizing: border-box;
   position: relative;
   overflow: hidden;
+  flex-grow: 1;
 
   .category {
     min-width: 280px;

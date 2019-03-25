@@ -17,6 +17,8 @@ body {
 #root {
   min-height: 100%;
   background-color: $bg-1;
+  display: flex;
+  flex-direction: column;
 }
 
 html.wf-loading {

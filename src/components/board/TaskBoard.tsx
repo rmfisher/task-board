@@ -60,6 +60,7 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
                       categoryIndex={i}
                       dragged={dragged}
                       onDragStart={this.handleDragStart}
+                      onDrag={this.handleDrag}
                       onDragEnd={this.handleDragEnd}
                     />
                   </React.Fragment>
@@ -95,6 +96,12 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
     }, COLLAPSE_DELAY)
 
     this.dragDropHelper.storeTaskLayout(this.rootElement, draggedElement)
+  }
+
+  private handleDrag = (x: number, y: number, draggedElement: HTMLDivElement) => {
+    const { clampedX, clampedY } = this.dragDropHelper.clampTaskPosition(x, y)
+    draggedElement.style.left = clampedX + 'px'
+    draggedElement.style.top = clampedY + 'px'
   }
 
   private handleDragEnd = () => {
