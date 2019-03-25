@@ -5,15 +5,15 @@ import TaskComponent from './Task'
 const DRAG_THRESHOLD = 10
 
 interface TaskDraggableProps {
-  categoryId: string
   task: Task
   taskIndex: number
+  categoryIndex: number
   dragged?: boolean
   onDragStart: (
     draggedTask: string,
     draggedTaskIndex: number,
-    draggedTaskCategory: string,
-    draggedTaskHeight: number
+    draggedTaskHeight: number,
+    draggedCategoryIndex: number
   ) => void
   onDragEnd: () => void
 }
@@ -62,7 +62,6 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
       this.mouseStartY = e.clientY
       this.startX = this.rootElement.offsetLeft
       this.startY = this.rootElement.offsetTop
-      this.setState({ mouseDown: true })
     }
   }
 
@@ -78,8 +77,8 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
       this.props.onDragStart(
         this.props.task.id,
         this.props.taskIndex,
-        this.props.categoryId,
-        this.rootElement.clientHeight
+        this.rootElement.clientHeight,
+        this.props.categoryIndex
       )
     }
 

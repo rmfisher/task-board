@@ -11,7 +11,6 @@
   box-shadow: $shadow-1;
   overflow: hidden;
   box-sizing: border-box;
-  transition: box-shadow 0.2s;
 
   .description {
     color: $text-1;
@@ -68,5 +67,6 @@
     margin-top: 0 !important;
     z-index: 100;
     box-shadow: $shadow-3;
+    transition: box-shadow 200ms;
   }
 }
