@@ -43,6 +43,15 @@
           height: 0 !important;
         }
       }
+
+      > .hover-placeholder {
+        transition: height 100ms cubic-bezier(0, 0, 0.7, 0.95);
+        background-color: $bg-3;
+        border-radius: 4px;
+        &.collapsed {
+          height: 0 !important;
+        }
+      }
     }
   }
 }

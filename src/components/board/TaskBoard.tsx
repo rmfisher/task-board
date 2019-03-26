@@ -15,7 +15,7 @@ interface TaskBoardState {
     draggedTaskHeight: number
     draggedCategoryIndex: number
     hoveredCategoryIndex?: number
-    hoveredIndex?: number
+    hoveredTaskIndex?: number
     collapseStarted: boolean
     expandStarted: boolean
     boardHeight: number
@@ -31,44 +31,70 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
   public render() {
     const { categories, dragState } = this.state
     const style = dragState ? { minHeight: dragState.boardHeight + 'px' } : undefined
+    if (dragState) {
+      console.log(dragState.hoveredCategoryIndex, dragState.hoveredTaskIndex)
+    }
     return (
       <div className="task-board" style={style} ref={e => (this.rootElement = e as HTMLDivElement)}>
-        {categories.map((c, i) => (
-          <div key={c.id} className="category">
-            <h2>{c.label}</h2>
-            <button className="add-button">
-              <AddIcon />
-            </button>
-            <div className="task-list">
-              {c.tasks.map((t, j) => {
-                const dragged = dragState && i === dragState.draggedCategoryIndex && t.id === dragState.draggedTask
-                const sourceCollapse = dragState && dragState.collapseStarted
-                const draggedTaskHeight = dragState && dragState.draggedTaskHeight + 'px'
-                return (
-                  <React.Fragment key={t.id}>
-                    {dragged && (
-                      <div
-                        key="placeholder"
-                        className={'placeholder' + (sourceCollapse ? ' collapsed' : '')}
-                        style={{ height: draggedTaskHeight }}
+        {categories.map((c, i) => {
+          const categoryHovered = dragState && dragState.hoveredCategoryIndex === i
+          const firstTaskHovered = categoryHovered && dragState!.hoveredTaskIndex === 0
+          const heightStyle = dragState && { height: dragState.draggedTaskHeight + 'px' }
+          return (
+            <div key={c.id} className="category">
+              <h2>{c.label}</h2>
+              <button className="add-button">
+                <AddIcon />
+              </button>
+              <div className="task-list">
+                {firstTaskHovered && (
+                  <div key={'hover-placeholder-0'} className="hover-placeholder" style={heightStyle} />
+                )}
+                {c.tasks.map((t, j) => {
+                  let dragged, sourceCollapse, hoveredAfter
+                  if (dragState) {
+                    dragged = dragState.draggedCategoryIndex === i && dragState.draggedTask === t.id
+                    sourceCollapse = dragState.collapseStarted
+                    if (categoryHovered) {
+                      if (
+                        dragState.draggedCategoryIndex === i &&
+                        dragState.draggedTaskIndex < dragState.hoveredTaskIndex!
+                      ) {
+                        hoveredAfter = dragState.hoveredTaskIndex === j
+                      } else {
+                        hoveredAfter = dragState.hoveredTaskIndex === j + 1
+                      }
+                    }
+                  }
+                  return (
+                    <React.Fragment key={t.id}>
+                      {false && dragged && (
+                        <div
+                          key="placeholder"
+                          className={'placeholder' + (sourceCollapse ? ' collapsed' : '')}
+                          style={heightStyle}
+                        />
+                      )}
+                      <TaskDraggable
+                        key={t.id}
+                        task={t}
+                        taskIndex={j}
+                        categoryIndex={i}
+                        dragged={dragged}
+                        onDragStart={this.handleDragStart}
+                        onDrag={this.handleDrag}
+                        onDragEnd={this.handleDragEnd}
                       />
-                    )}
-                    <TaskDraggable
-                      key={t.id}
-                      task={t}
-                      taskIndex={j}
-                      categoryIndex={i}
-                      dragged={dragged}
-                      onDragStart={this.handleDragStart}
-                      onDrag={this.handleDrag}
-                      onDragEnd={this.handleDragEnd}
-                    />
-                  </React.Fragment>
-                )
-              })}
+                      {hoveredAfter && (
+                        <div key={'hover-placeholder-' + (j + 1)} className="hover-placeholder" style={heightStyle} />
+                      )}
+                    </React.Fragment>
+                  )
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     )
   }
@@ -92,16 +118,28 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
     })
 
     setTimeout(() => {
-      this.setState({ dragState: { ...(this.state.dragState as any), collapseStarted: true } })
+      if (!this.state.dragState) return
+      this.setState({ dragState: { ...this.state.dragState, collapseStarted: true } })
     }, COLLAPSE_DELAY)
 
     this.dragDropHelper.storeTaskLayout(this.rootElement, draggedElement)
   }
 
   private handleDrag = (x: number, y: number, draggedElement: HTMLDivElement) => {
-    const { clampedX, clampedY } = this.dragDropHelper.clampTaskPosition(x, y)
+    if (!this.state.dragState) return
+
+    const { clampedX, clampedY } = this.dragDropHelper.clampPosition(x, y)
     draggedElement.style.left = clampedX + 'px'
     draggedElement.style.top = clampedY + 'px'
+
+    const location = this.dragDropHelper.getHoverLocation(x, y)
+    const dragState = this.state.dragState
+    const hoveredCategoryIndex = location ? location.i : undefined
+    const hoveredTaskIndex = location ? location.j : undefined
+
+    if (hoveredCategoryIndex !== dragState.hoveredCategoryIndex || hoveredTaskIndex !== dragState.hoveredTaskIndex) {
+      this.setState({ dragState: { ...dragState, hoveredCategoryIndex, hoveredTaskIndex } })
+    }
   }
 
   private handleDragEnd = () => {

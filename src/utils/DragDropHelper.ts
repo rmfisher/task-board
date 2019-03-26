@@ -1,61 +1,85 @@
 const TASK_MARGIN = 15
 const BOARD_BOUNDS_PADDING = 10
-
-interface Box {
-  x: number
-  y: number
-  width: number
-  height: number
-}
+const CATEGORY_X_THRESHOLD = 0.35
 
 class DragDropHelper {
-  private taskBoardBounds!: Box
-  private draggedTask!: Box
-  private tasks!: Box[][]
+  private boardWidth!: number
+  private boardHeight!: number
+  private draggedTaskWidth!: number
+  private draggedTaskHeight!: number
+  private categories!: Array<{ x: number; width: number }>
+  private tasks!: Array<Array<{ width: number; height: number }>>
+  private taskLists!: number[]
 
   public storeTaskLayout(taskBoardElement: HTMLDivElement, draggedTaskElement: HTMLDivElement) {
-    this.taskBoardBounds = { x: 0, y: 0, width: taskBoardElement.clientWidth, height: taskBoardElement.clientHeight }
+    this.boardWidth = taskBoardElement.clientWidth
+    this.boardHeight = taskBoardElement.clientHeight
 
-    this.draggedTask = {
-      x: draggedTaskElement.offsetLeft,
-      y: draggedTaskElement.offsetTop,
-      width: draggedTaskElement.clientWidth,
-      height: draggedTaskElement.clientHeight,
-    }
+    this.draggedTaskWidth = draggedTaskElement.clientWidth
+    this.draggedTaskHeight = draggedTaskElement.clientHeight
 
+    this.categories = []
     this.tasks = []
+    this.taskLists = []
     taskBoardElement.childNodes.forEach((categoryElement, i) => {
-      this.tasks[i] = []
-      let yOffset = 0
-
       if (categoryElement instanceof HTMLDivElement) {
-        categoryElement.querySelectorAll('.task').forEach((taskElement, j) => {
-          if (taskElement instanceof HTMLDivElement) {
-            const x = taskElement.offsetLeft
-            const y = taskElement.offsetTop - yOffset
-            const width = taskElement.clientWidth
-            const height = taskElement.clientHeight
-            const box = { x, y, width, height }
+        this.categories.push({ x: categoryElement.offsetLeft, width: categoryElement.clientWidth })
 
-            if (taskElement !== draggedTaskElement) {
-              this.tasks[i].push(box)
-            } else {
-              yOffset += this.draggedTask.height + TASK_MARGIN
-            }
+        this.tasks[i] = []
+        categoryElement.querySelectorAll('.task').forEach((taskElement, j) => {
+          if (taskElement instanceof HTMLDivElement && taskElement !== draggedTaskElement) {
+            this.tasks[i].push({ width: taskElement.clientWidth, height: taskElement.clientHeight })
           }
         })
+
+        const taskListElement = categoryElement.querySelector('.task-list')
+        if (taskListElement instanceof HTMLDivElement) {
+          this.taskLists[i] = taskListElement.offsetTop
+        }
       }
     })
   }
 
-  public clampTaskPosition(x: number, y: number) {
+  public clampPosition(x: number, y: number) {
     const minX = BOARD_BOUNDS_PADDING
     const minY = BOARD_BOUNDS_PADDING
-    const maxX = this.taskBoardBounds.width - this.draggedTask.width - BOARD_BOUNDS_PADDING
-    const maxY = this.taskBoardBounds.height - this.draggedTask.height - BOARD_BOUNDS_PADDING
+    const maxX = this.boardWidth - this.draggedTaskWidth - BOARD_BOUNDS_PADDING
+    const maxY = this.boardHeight - this.draggedTaskHeight - BOARD_BOUNDS_PADDING
     const clampedX = Math.max(minX, Math.min(maxX, x))
     const clampedY = Math.max(minY, Math.min(maxY, y))
     return { clampedX, clampedY }
+  }
+
+  public getHoverLocation(x: number, y: number) {
+    const dragMidX = x + this.draggedTaskWidth / 2
+    const dragMidY = y + this.draggedTaskHeight / 2
+
+    let categoryIndex
+    for (let i = 0; i < this.categories.length; i++) {
+      const category = this.categories[i]
+      const midX = category.x + category.width / 2
+      const delta = Math.abs(dragMidX - midX)
+      if (delta / category.width < CATEGORY_X_THRESHOLD) {
+        categoryIndex = i
+        break
+      }
+    }
+
+    let taskIndex = 0
+    if (categoryIndex !== undefined) {
+      const tasks = this.tasks[categoryIndex]
+      let yOffset = this.taskLists[categoryIndex]
+      for (let j = 0; j < tasks.length; j++) {
+        const task = tasks[j]
+        yOffset += task.height
+        if (dragMidY > yOffset + TASK_MARGIN / 2) {
+          taskIndex = j + 1
+        }
+        yOffset += TASK_MARGIN
+      }
+    }
+
+    return categoryIndex !== undefined ? { i: categoryIndex, j: taskIndex } : null
   }
 }
 
