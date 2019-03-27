@@ -2,46 +2,37 @@ import React from 'react'
 import { Task } from '../../state'
 import TaskComponent from './Task'
 
-const DRAG_THRESHOLD = 10
-
 interface TaskDraggableProps {
   task: Task
   taskIndex: number
   categoryIndex: number
   dragged?: boolean
-  onDragStart: (
-    draggedTask: string,
-    draggedTaskIndex: number,
-    draggedCategoryIndex: number,
-    draggedElement: HTMLDivElement
+  onMouseDown: (
+    e: MouseEvent,
+    draggedElement: HTMLDivElement,
+    taskId: string,
+    taskIndex: number,
+    categoryIndex: number
   ) => void
-  onDrag: (x: number, y: number, draggedElement: HTMLDivElement) => void
-  onDragEnd: () => void
+  onMouseMove: (e: MouseEvent) => void
+  onMouseUp: () => void
 }
 
 class TaskDraggable extends React.Component<TaskDraggableProps> {
-  public readonly state = { width: 0, height: 0, mouseDown: false }
-
   private rootElement!: HTMLDivElement
-  private startX: number = 0
-  private startY: number = 0
-  private mouseStartX: number = 0
-  private mouseStartY: number = 0
-  private mouseDown: boolean = false
-  private dragInProgress: boolean = false
 
   public componentDidMount() {
     this.rootElement.addEventListener('mousedown', this.handleMouseDown)
     document.addEventListener('mousemove', this.handleMouseMove)
-    window.addEventListener('mouseup', this.endDrag)
-    window.addEventListener('blur', this.endDrag)
+    window.addEventListener('mouseup', this.handleMouseUp)
+    window.addEventListener('blur', this.handleMouseUp)
   }
 
   public componentWillUnmount() {
     this.rootElement.removeEventListener('mousedown', this.handleMouseDown)
     document.removeEventListener('mousemove', this.handleMouseMove)
-    window.removeEventListener('mouseup', this.endDrag)
-    window.removeEventListener('blur', this.endDrag)
+    window.removeEventListener('mouseup', this.handleMouseUp)
+    window.removeEventListener('blur', this.handleMouseUp)
   }
 
   public render() {
@@ -56,43 +47,15 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
   }
 
   private handleMouseDown = (e: MouseEvent) => {
-    if (e.button === 0) {
-      e.preventDefault()
-      this.mouseDown = true
-      this.mouseStartX = e.clientX
-      this.mouseStartY = e.clientY
-      this.startX = this.rootElement.offsetLeft
-      this.startY = this.rootElement.offsetTop
-    } else {
-      this.endDrag()
-    }
+    this.props.onMouseDown(e, this.rootElement, this.props.task.id, this.props.taskIndex, this.props.categoryIndex)
   }
 
   private handleMouseMove = (e: MouseEvent) => {
-    const deltaX = e.clientX - this.mouseStartX
-    const deltaY = e.clientY - this.mouseStartY
-
-    if (this.mouseDown && !this.dragInProgress && Math.hypot(deltaX, deltaY) > DRAG_THRESHOLD) {
-      this.dragInProgress = true
-      this.rootElement.style.width = this.rootElement.clientWidth + 'px'
-      this.rootElement.style.height = this.rootElement.clientHeight + 'px'
-
-      this.props.onDragStart(this.props.task.id, this.props.taskIndex, this.props.categoryIndex, this.rootElement)
-    }
-
-    if (this.dragInProgress) {
-      this.props.onDrag(this.startX + deltaX, this.startY + deltaY, this.rootElement)
-    }
+    this.props.onMouseMove(e)
   }
 
-  private endDrag = () => {
-    this.dragInProgress = false
-    this.mouseDown = false
-    this.rootElement.style.width = null
-    this.rootElement.style.height = null
-    this.rootElement.style.left = null
-    this.rootElement.style.top = null
-    this.props.onDragEnd()
+  private handleMouseUp = () => {
+    this.props.onMouseUp()
   }
 }
 
