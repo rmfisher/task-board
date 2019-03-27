@@ -14,7 +14,6 @@ interface TaskBoardState {
     draggedCategoryIndex: number
     hoveredCategoryIndex?: number
     hoveredTaskIndex?: number
-    boardHeight: number
   }
 }
 
@@ -31,10 +30,8 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
 
   public render() {
     const { categories, dragState } = this.state
-    const style = dragState ? { height: dragState.boardHeight + 'px' } : undefined
-
     return (
-      <div className="task-board" style={style} ref={e => (this.rootElement = e as HTMLDivElement)}>
+      <div className="task-board" ref={e => (this.rootElement = e as HTMLDivElement)}>
         {categories.map((c, i) => {
           const categoryHovered = dragState && dragState.hoveredCategoryIndex === i
           const firstTaskHovered = categoryHovered && dragState!.hoveredTaskIndex === 0
@@ -114,8 +111,7 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
     draggedTaskId: string,
     draggedTaskIndex: number,
     draggedTaskHeight: number,
-    draggedCategoryIndex: number,
-    boardHeight: number
+    draggedCategoryIndex: number
   ) => {
     this.setState({
       dragState: {
@@ -123,7 +119,6 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
         draggedTaskIndex,
         draggedTaskHeight,
         draggedCategoryIndex,
-        boardHeight,
       },
     })
   }

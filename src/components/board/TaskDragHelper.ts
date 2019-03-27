@@ -25,14 +25,7 @@ class DragDropHelper {
   private tasks!: Array<Array<{ width: number; height: number }>>
   private taskLists!: number[]
 
-  private onStart!: (
-    taskId: string,
-    taskIndex: number,
-    taskHeight: number,
-    categoryIndex: number,
-    boardHeight: number
-  ) => void
-
+  private onStart!: (taskId: string, taskIndex: number, taskHeight: number, categoryIndex: number) => void
   private onHover!: (hoveredCategoryIndex?: number, hoveredTaskIndex?: number) => void
 
   public onMouseDown(
@@ -97,8 +90,9 @@ class DragDropHelper {
         this.dragInProgress = true
         this.draggedElement.style.width = this.draggedElement.clientWidth + 'px'
         this.draggedElement.style.height = this.draggedElement.clientHeight + 'px'
+        this.boardElement.style.height = this.boardElement.clientHeight + 'px'
 
-        this.onStart(this.taskId, this.taskIndex, this.height, this.categoryIndex, this.boardHeight)
+        this.onStart(this.taskId, this.taskIndex, this.height, this.categoryIndex)
       }
 
       if (this.dragInProgress) {
