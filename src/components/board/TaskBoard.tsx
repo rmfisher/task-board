@@ -26,6 +26,7 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
   public componentDidMount() {
     this.dragHelper.setOnStart(this.handleDragStart)
     this.dragHelper.setOnHover(this.handleDragHover)
+    this.dragHelper.setOnEnd(this.handleDragEnd)
   }
 
   public render() {
@@ -104,7 +105,6 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
 
   private handleMouseUp = () => {
     this.dragHelper.endDrag()
-    this.setState({ dragState: undefined })
   }
 
   private handleDragStart = (
@@ -128,6 +128,10 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
     if (hoveredCategoryIndex !== dragState!.hoveredCategoryIndex || hoveredTaskIndex !== dragState!.hoveredTaskIndex) {
       this.setState({ dragState: { ...dragState!, hoveredCategoryIndex, hoveredTaskIndex } })
     }
+  }
+
+  private handleDragEnd = () => {
+    this.setState({ dragState: undefined })
   }
 }
 

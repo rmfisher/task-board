@@ -27,6 +27,7 @@ class DragDropHelper {
 
   private onStart!: (taskId: string, taskIndex: number, taskHeight: number, categoryIndex: number) => void
   private onHover!: (hoveredCategoryIndex?: number, hoveredTaskIndex?: number) => void
+  private onEnd!: () => void
 
   public onMouseDown(
     e: MouseEvent,
@@ -120,6 +121,12 @@ class DragDropHelper {
   public endDrag() {
     this.mouseDown = false
     this.dragInProgress = false
+    this.draggedElement.style.left = null
+    this.draggedElement.style.top = null
+    this.draggedElement.style.width = null
+    this.draggedElement.style.height = null
+    this.boardElement.style.height = null
+    this.onEnd()
   }
 
   public setOnStart(onStart: any) {
@@ -128,6 +135,10 @@ class DragDropHelper {
 
   public setOnHover(onHover: any) {
     this.onHover = onHover
+  }
+
+  public setOnEnd(onEnd: any) {
+    this.onEnd = onEnd
   }
 
   private notifyHoverLocation(x: number, y: number) {
