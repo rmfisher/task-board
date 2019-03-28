@@ -1,4 +1,3 @@
-const TASK_MARGIN = 15
 const BOARD_BOUNDS_PADDING = 10
 const DRAG_START_THRESHOLD = 10
 const CATEGORY_SNAP_THRESHOLD = 0.35
@@ -121,11 +120,13 @@ class DragDropHelper {
   public endDrag() {
     this.mouseDown = false
     this.dragInProgress = false
-    this.draggedElement.style.left = null
-    this.draggedElement.style.top = null
-    this.draggedElement.style.width = null
-    this.draggedElement.style.height = null
-    this.boardElement.style.height = null
+    if (this.draggedElement) {
+      this.draggedElement.style.left = null
+      this.draggedElement.style.top = null
+      this.draggedElement.style.width = null
+      this.draggedElement.style.height = null
+      this.boardElement.style.height = null
+    }
     this.onEnd()
   }
 
@@ -163,10 +164,9 @@ class DragDropHelper {
       for (let j = 0; j < tasks.length; j++) {
         const task = tasks[j]
         yOffset += task.height
-        if (dragMidY > yOffset + TASK_MARGIN / 2) {
+        if (dragMidY > yOffset) {
           taskIndex = j + 1
         }
-        yOffset += TASK_MARGIN
       }
     }
 

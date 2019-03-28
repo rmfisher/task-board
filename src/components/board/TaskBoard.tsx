@@ -35,15 +35,7 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
     return (
       <div className="task-board" ref={e => (this.rootElement = e as HTMLDivElement)}>
         {categories.map((c, i) => {
-          let categoryHovered: any, firstTaskHovered, animatePlaceholder: any
-          if (dragState) {
-            categoryHovered = dragState.hoveredCategoryIndex === i
-            firstTaskHovered = categoryHovered && dragState.hoveredTaskIndex === 0
-            if (dragState.hoveredTaskIndex !== undefined) {
-              const taskCount = c.tasks.filter(t => t.id !== dragState.draggedTaskId).length
-              animatePlaceholder = dragState.hoveredTaskIndex < taskCount
-            }
-          }
+          const categoryHovered = dragState && dragState.hoveredCategoryIndex === i
           return (
             <div key={c.id} className="category">
               <h2>{c.label}</h2>
@@ -51,12 +43,11 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
                 <AddIcon />
               </button>
               <div className="task-list">
-                {firstTaskHovered && (
+                {dragState && (
                   <Placeholder
                     key={'hover-placeholder-0'}
-                    initialHeight={0}
-                    finalHeight={dragState!.draggedTaskHeight}
-                    animate={animatePlaceholder}
+                    height={dragState.draggedTaskHeight}
+                    expanded={!!categoryHovered && dragState.hoveredTaskIndex === 0}
                   />
                 )}
                 {c.tasks.map((t, j) => {
@@ -86,12 +77,11 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
                         onMouseMove={this.handleMouseMove}
                         onMouseUp={this.handleMouseUp}
                       />
-                      {hoveredAfter && (
+                      {dragState && t.id !== dragState.draggedTaskId && (
                         <Placeholder
                           key={'hover-placeholder-' + (j + 1)}
-                          initialHeight={0}
-                          finalHeight={dragState!.draggedTaskHeight}
-                          animate={animatePlaceholder}
+                          height={dragState.draggedTaskHeight}
+                          expanded={!!hoveredAfter}
                         />
                       )}
                     </React.Fragment>

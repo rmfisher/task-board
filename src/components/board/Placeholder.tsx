@@ -2,33 +2,47 @@ import React from 'react'
 import './Placeholder.scss'
 
 interface PlaceholderProps {
-  initialHeight: number
-  finalHeight: number
-  animate?: boolean
+  height: number
+  expanded: boolean
 }
 
 interface PlaceholderState {
   height: number
+  animating: boolean
 }
 
 class Placeholder extends React.Component<PlaceholderProps, PlaceholderState> {
-  public readonly state = { height: this.props.animate ? this.props.initialHeight : this.props.finalHeight }
+  public readonly state = { height: this.props.expanded ? this.props.height : 0, animating: false }
+
+  private rootElement!: HTMLDivElement
 
   public componentDidMount() {
-    if (this.props.animate) {
-      this.startAnimation()
+    this.rootElement.addEventListener('animationend', this.handleAnimationEnd)
+  }
+
+  public componentWillUnmount() {
+    this.rootElement.removeEventListener('animationend', this.handleAnimationEnd)
+  }
+  public componentDidUpdate(prevProps: PlaceholderProps) {
+    if (prevProps.expanded !== this.props.expanded) {
+      this.setState({ height: this.props.expanded ? this.props.height : 0, animating: true })
     }
   }
 
   public render() {
-    return <div className="placeholder" style={{ height: this.state.height }} />
+    return (
+      <span
+        className="placeholder"
+        style={{ height: this.state.height }}
+        ref={e => (this.rootElement = e as HTMLDivElement)}
+      >
+        <div className="placeholder-fill" />
+      </span>
+    )
   }
 
-  private startAnimation() {
-    const height = this.props.finalHeight
-    if (height !== undefined) {
-      setTimeout(() => this.setState({ height }), 1)
-    }
+  private handleAnimationEnd() {
+    this.setState({ animating: false })
   }
 }
 

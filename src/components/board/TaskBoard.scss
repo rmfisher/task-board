@@ -14,11 +14,11 @@
     max-width: 400px;
     flex-grow: 1;
     background-color: $bg-2;
-    padding: 15px;
+    padding: 16px;
     border-radius: 4px;
 
     &:not(:first-child) {
-      margin-left: 15px;
+      margin-left: 16px;
     }
 
     h2 {
@@ -29,13 +29,7 @@
 
     .add-button {
       width: 100%;
-      margin-bottom: 15px;
-    }
-
-    .task-list {
-      > *:not(:first-child) {
-        margin-top: 15px;
-      }
+      margin-bottom: 8px;
     }
   }
 
