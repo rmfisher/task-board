@@ -2,6 +2,7 @@ const BOARD_BOUNDS_X_INSET = 10
 const BOARD_BOUNDS_Y_INSET = 4
 const DRAG_START_THRESHOLD = 10
 const CATEGORY_SNAP_THRESHOLD = 0.45
+const MARGIN_LEFT = 16
 
 class DragDropHelper {
   private mouseDown: boolean = false
@@ -24,6 +25,9 @@ class DragDropHelper {
   private categories!: Array<{ x: number; width: number }>
   private tasks!: Array<Array<{ width: number; height: number }>>
   private taskLists!: number[]
+  private hoverStartX?: number
+  private hoverStartY?: number
+  private endPhase: boolean = false
 
   private onStart!: (
     taskId: string,
@@ -63,6 +67,7 @@ class DragDropHelper {
       this.taskId = taskId
       this.taskIndex = taskIndex
       this.categoryIndex = categoryIndex
+      this.endPhase = false
 
       this.categories = []
       this.tasks = []
@@ -121,6 +126,13 @@ class DragDropHelper {
         this.draggedElement.style.top = clampedY + 'px'
 
         const { i, j } = this.getHoverLocation(clampedX, clampedY)
+        if (i !== undefined && j !== undefined) {
+          this.hoverStartX = this.categories[i].x + MARGIN_LEFT
+          this.hoverStartY = this.tasks[i].reduce((r, t, k) => (r + k < j ? t.height : 0), this.taskLists[i])
+        } else {
+          this.hoverStartX = undefined
+          this.hoverStartY = undefined
+        }
 
         if (dragJustStarted) {
           this.onStart(this.taskId, this.taskIndex, this.height, this.categoryIndex, i, j)
@@ -134,16 +146,27 @@ class DragDropHelper {
   public endDrag() {
     this.mouseDown = false
     this.dragInProgress = false
-    if (this.draggedElement) {
-      this.draggedElement.style.left = null
-      this.draggedElement.style.top = null
-      this.draggedElement.style.width = null
-      this.draggedElement.style.height = null
-    }
-    if (this.boardElement) {
-      this.boardElement.style.height = null
-    }
-    this.onEnd()
+    this.endPhase = true
+
+    const destX = this.hoverStartX !== undefined ? this.hoverStartX : this.startX
+    const destY = this.hoverStartY !== undefined ? this.hoverStartY : this.startY
+    this.draggedElement.classList.add('released')
+    this.draggedElement.addEventListener(
+      'animationend',
+      () => {
+        this.draggedElement.classList.remove('released')
+      },
+      { once: true }
+    )
+    setTimeout(() => {
+      this.draggedElement.style.left = destX + 'px'
+      this.draggedElement.style.top = destY + 'px'
+    }, 1)
+
+    setTimeout(() => {
+      this.cleanUp()
+      this.onEnd()
+    }, 500)
   }
 
   public setOnStart(onStart: any) {
@@ -191,6 +214,22 @@ class DragDropHelper {
     } else {
       return { i: undefined, j: undefined }
     }
+  }
+
+  private cleanUp() {
+    if (this.draggedElement) {
+      this.draggedElement.style.left = null
+      this.draggedElement.style.top = null
+      this.draggedElement.style.width = null
+      this.draggedElement.style.height = null
+    }
+    if (this.boardElement) {
+      this.boardElement.style.height = null
+    }
+
+    this.hoverStartX = undefined
+    this.hoverStartY = undefined
+    this.endPhase = false
   }
 }
 
