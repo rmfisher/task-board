@@ -118,7 +118,9 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
     draggedTaskId: string,
     draggedTaskIndex: number,
     draggedTaskHeight: number,
-    draggedCategoryIndex: number
+    draggedCategoryIndex: number,
+    hoveredCategoryIndex: number,
+    hoveredTaskIndex: number
   ) => {
     this.setState({
       dragState: {
@@ -126,6 +128,8 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
         draggedTaskIndex,
         draggedTaskHeight,
         draggedCategoryIndex,
+        hoveredCategoryIndex,
+        hoveredTaskIndex,
       },
     })
   }

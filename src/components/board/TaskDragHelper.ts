@@ -1,6 +1,6 @@
 const BOARD_BOUNDS_PADDING = 10
 const DRAG_START_THRESHOLD = 10
-const CATEGORY_SNAP_THRESHOLD = 0.35
+const CATEGORY_SNAP_THRESHOLD = 0.45
 
 class DragDropHelper {
   private mouseDown: boolean = false
@@ -24,7 +24,14 @@ class DragDropHelper {
   private tasks!: Array<Array<{ width: number; height: number }>>
   private taskLists!: number[]
 
-  private onStart!: (taskId: string, taskIndex: number, taskHeight: number, categoryIndex: number) => void
+  private onStart!: (
+    taskId: string,
+    taskIndex: number,
+    taskHeight: number,
+    categoryIndex: number,
+    hoveredCategoryIndex?: number,
+    hoveredTaskIndex?: number
+  ) => void
   private onHover!: (hoveredCategoryIndex?: number, hoveredTaskIndex?: number) => void
   private onEnd!: () => void
 
@@ -86,13 +93,13 @@ class DragDropHelper {
       const deltaX = e.clientX - this.mouseStartX
       const deltaY = e.clientY - this.mouseStartY
 
+      let dragJustStarted = false
       if (!this.dragInProgress && Math.hypot(deltaX, deltaY) > DRAG_START_THRESHOLD) {
         this.dragInProgress = true
-        this.draggedElement.style.width = this.draggedElement.clientWidth + 'px'
-        this.draggedElement.style.height = this.draggedElement.clientHeight + 'px'
-        this.boardElement.style.height = this.boardElement.clientHeight + 'px'
-
-        this.onStart(this.taskId, this.taskIndex, this.height, this.categoryIndex)
+        this.draggedElement.style.width = this.width + 'px'
+        this.draggedElement.style.height = this.height + 'px'
+        this.boardElement.style.height = this.boardHeight + 'px'
+        dragJustStarted = true
       }
 
       if (this.dragInProgress) {
@@ -112,7 +119,13 @@ class DragDropHelper {
         this.draggedElement.style.left = clampedX + 'px'
         this.draggedElement.style.top = clampedY + 'px'
 
-        this.notifyHoverLocation(clampedX, clampedY)
+        const { i, j } = this.getHoverLocation(clampedX, clampedY)
+
+        if (dragJustStarted) {
+          this.onStart(this.taskId, this.taskIndex, this.height, this.categoryIndex, i, j)
+        } else {
+          this.onHover(i, j)
+        }
       }
     }
   }
@@ -125,6 +138,8 @@ class DragDropHelper {
       this.draggedElement.style.top = null
       this.draggedElement.style.width = null
       this.draggedElement.style.height = null
+    }
+    if (this.boardElement) {
       this.boardElement.style.height = null
     }
     this.onEnd()
@@ -142,7 +157,7 @@ class DragDropHelper {
     this.onEnd = onEnd
   }
 
-  private notifyHoverLocation(x: number, y: number) {
+  private getHoverLocation(x: number, y: number) {
     const dragMidX = x + this.width / 2
     const dragMidY = y + this.height / 2
 
@@ -171,9 +186,9 @@ class DragDropHelper {
     }
 
     if (categoryIndex !== undefined) {
-      this.onHover(categoryIndex, taskIndex)
+      return { i: categoryIndex, j: taskIndex }
     } else {
-      this.onHover(undefined, undefined)
+      return { i: undefined, j: undefined }
     }
   }
 }

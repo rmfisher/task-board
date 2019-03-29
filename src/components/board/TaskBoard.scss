@@ -1,7 +1,7 @@
 @import '../app/Variables.scss';
 
 .task-board {
-  padding: 40px 20px;
+  padding: 40px 20px 20px 20px;
   display: flex;
   box-sizing: border-box;
   position: relative;
@@ -35,6 +35,8 @@
 
   .extra-height {
     height: 180px;
+    min-height: 0px;
+    flex-shrink: 1;
     visibility: hidden;
   }
 }

@@ -8,41 +8,23 @@ interface PlaceholderProps {
 
 interface PlaceholderState {
   height: number
-  animating: boolean
 }
 
 class Placeholder extends React.Component<PlaceholderProps, PlaceholderState> {
-  public readonly state = { height: this.props.expanded ? this.props.height : 0, animating: false }
+  public readonly state = { height: this.props.expanded ? this.props.height : 0 }
 
-  private rootElement!: HTMLDivElement
-
-  public componentDidMount() {
-    this.rootElement.addEventListener('animationend', this.handleAnimationEnd)
-  }
-
-  public componentWillUnmount() {
-    this.rootElement.removeEventListener('animationend', this.handleAnimationEnd)
-  }
   public componentDidUpdate(prevProps: PlaceholderProps) {
     if (prevProps.expanded !== this.props.expanded) {
-      this.setState({ height: this.props.expanded ? this.props.height : 0, animating: true })
+      this.setState({ height: this.props.expanded ? this.props.height : 0 })
     }
   }
 
   public render() {
     return (
-      <span
-        className="placeholder"
-        style={{ height: this.state.height }}
-        ref={e => (this.rootElement = e as HTMLDivElement)}
-      >
+      <span className="placeholder" style={{ height: this.state.height }}>
         <div className="placeholder-fill" />
       </span>
     )
-  }
-
-  private handleAnimationEnd() {
-    this.setState({ animating: false })
   }
 }
 
