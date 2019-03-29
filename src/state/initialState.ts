@@ -25,12 +25,6 @@ export const initialState: State = {
           userLabel: 'sorcerio',
           labels: [{ name: 'Low', color: 'green' }, { name: 'IE', color: 'blue' }],
         },
-        {
-          id: '4',
-          description: 'Landing page has a typo',
-          userLabel: 'elfo',
-          labels: [{ name: 'Medium', color: 'orange' }, { name: 'All', color: 'yellow' }],
-        },
       ],
     },
     {
@@ -38,26 +32,31 @@ export const initialState: State = {
       label: 'Ready',
       tasks: [
         {
-          id: '5',
+          id: '4',
           description: 'Clicking on "learn more" generates error message',
           userLabel: 'sorcerio',
           labels: [{ name: 'Medium', color: 'orange' }, { name: 'All', color: 'yellow' }],
         },
         {
-          id: '6',
+          id: '5',
           description: "Login button doesn't work on mobile",
           userLabel: 'sorcerio',
           labels: [{ name: 'Medium', color: 'orange' }],
         },
+      ],
+    },
+    {
+      id: '3',
+      label: 'In Progress',
+      tasks: [
         {
-          id: '7',
+          id: '6',
           description: 'iOS app crashing',
           userLabel: 'bean',
           labels: [{ name: 'High', color: 'red' }],
         },
       ],
     },
-    { id: '3', label: 'In Progress', tasks: [] },
     { id: '4', label: 'Done', tasks: [] },
   ],
 }

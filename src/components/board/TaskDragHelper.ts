@@ -1,4 +1,5 @@
-const BOARD_BOUNDS_PADDING = 10
+const BOARD_BOUNDS_X_INSET = 10
+const BOARD_BOUNDS_Y_INSET = 4
 const DRAG_START_THRESHOLD = 10
 const CATEGORY_SNAP_THRESHOLD = 0.45
 
@@ -109,10 +110,10 @@ class DragDropHelper {
         const viewportDeltaX = this.boardViewportX - boardRect.left
         const viewportDeltaY = this.boardViewportY - boardRect.top
 
-        const minX = BOARD_BOUNDS_PADDING
-        const minY = BOARD_BOUNDS_PADDING
-        const maxX = this.boardWidth - this.width - BOARD_BOUNDS_PADDING
-        const maxY = this.boardHeight - this.height - BOARD_BOUNDS_PADDING
+        const minX = BOARD_BOUNDS_X_INSET
+        const minY = BOARD_BOUNDS_Y_INSET
+        const maxX = this.boardWidth - this.width - BOARD_BOUNDS_X_INSET
+        const maxY = this.boardHeight - this.height - BOARD_BOUNDS_Y_INSET
         const clampedX = Math.max(minX, Math.min(maxX, x + viewportDeltaX))
         const clampedY = Math.max(minY, Math.min(maxY, y + viewportDeltaY))
 
