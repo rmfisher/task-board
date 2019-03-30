@@ -3,6 +3,7 @@ const BOARD_BOUNDS_Y_INSET = 4
 const DRAG_START_THRESHOLD = 10
 const CATEGORY_SNAP_THRESHOLD = 0.45
 const MARGIN_LEFT = 16
+const RELEASE_TRANSITION_DURATION = 180
 
 class DragDropHelper {
   private mouseDown: boolean = false
@@ -25,9 +26,8 @@ class DragDropHelper {
   private categories!: Array<{ x: number; width: number }>
   private tasks!: Array<Array<{ width: number; height: number }>>
   private taskLists!: number[]
-  private hoverStartX?: number
-  private hoverStartY?: number
-  private endPhase: boolean = false
+  private hoveredCategoryIndex?: number
+  private hoveredTaskIndex?: number
 
   private onStart!: (
     taskId: string,
@@ -38,6 +38,7 @@ class DragDropHelper {
     hoveredTaskIndex?: number
   ) => void
   private onHover!: (hoveredCategoryIndex?: number, hoveredTaskIndex?: number) => void
+  private onDrop!: () => void
   private onEnd!: () => void
 
   public onMouseDown(
@@ -67,7 +68,6 @@ class DragDropHelper {
       this.taskId = taskId
       this.taskIndex = taskIndex
       this.categoryIndex = categoryIndex
-      this.endPhase = false
 
       this.categories = []
       this.tasks = []
@@ -125,48 +125,55 @@ class DragDropHelper {
         this.draggedElement.style.left = clampedX + 'px'
         this.draggedElement.style.top = clampedY + 'px'
 
-        const { i, j } = this.getHoverLocation(clampedX, clampedY)
-        if (i !== undefined && j !== undefined) {
-          this.hoverStartX = this.categories[i].x + MARGIN_LEFT
-          this.hoverStartY = this.tasks[i].reduce((r, t, k) => (r + k < j ? t.height : 0), this.taskLists[i])
-        } else {
-          this.hoverStartX = undefined
-          this.hoverStartY = undefined
-        }
+        this.recordHoverLocation(clampedX, clampedY)
 
         if (dragJustStarted) {
-          this.onStart(this.taskId, this.taskIndex, this.height, this.categoryIndex, i, j)
+          this.onStart(
+            this.taskId,
+            this.taskIndex,
+            this.height,
+            this.categoryIndex,
+            this.hoveredCategoryIndex,
+            this.hoveredTaskIndex
+          )
+          this.draggedElement.classList.add('dragged')
         } else {
-          this.onHover(i, j)
+          this.onHover(this.hoveredCategoryIndex, this.hoveredTaskIndex)
         }
       }
     }
   }
 
   public endDrag() {
-    this.mouseDown = false
+    if (this.dragInProgress) {
+      this.draggedElement.classList.add('released')
+      this.draggedElement.classList.remove('dragged')
+
+      let hoverStartX: number, hoverStartY: number
+      const i = this.hoveredCategoryIndex
+      const j = this.hoveredTaskIndex
+      if (i !== undefined && j !== undefined) {
+        hoverStartX = this.categories[i].x + MARGIN_LEFT
+        hoverStartY = this.tasks[i].reduce((r, t, k) => (k < j ? r + t.height : r), this.taskLists[i])
+      }
+
+      setTimeout(() => {
+        const destX = hoverStartX !== undefined ? hoverStartX : this.startX
+        const destY = hoverStartY !== undefined ? hoverStartY : this.startY
+        this.draggedElement.style.left = destX + 'px'
+        this.draggedElement.style.top = destY + 'px'
+      }, 1)
+
+      setTimeout(() => {
+        this.cleanUp()
+        this.onEnd()
+      }, RELEASE_TRANSITION_DURATION)
+
+      this.onDrop()
+    }
+
     this.dragInProgress = false
-    this.endPhase = true
-
-    const destX = this.hoverStartX !== undefined ? this.hoverStartX : this.startX
-    const destY = this.hoverStartY !== undefined ? this.hoverStartY : this.startY
-    this.draggedElement.classList.add('released')
-    this.draggedElement.addEventListener(
-      'animationend',
-      () => {
-        this.draggedElement.classList.remove('released')
-      },
-      { once: true }
-    )
-    setTimeout(() => {
-      this.draggedElement.style.left = destX + 'px'
-      this.draggedElement.style.top = destY + 'px'
-    }, 1)
-
-    setTimeout(() => {
-      this.cleanUp()
-      this.onEnd()
-    }, 500)
+    this.mouseDown = false
   }
 
   public setOnStart(onStart: any) {
@@ -177,11 +184,15 @@ class DragDropHelper {
     this.onHover = onHover
   }
 
+  public setOnDrop(onDrop: any) {
+    this.onDrop = onDrop
+  }
+
   public setOnEnd(onEnd: any) {
     this.onEnd = onEnd
   }
 
-  private getHoverLocation(x: number, y: number) {
+  private recordHoverLocation(x: number, y: number) {
     const dragMidX = x + this.width / 2
     const dragMidY = y + this.height / 2
 
@@ -210,14 +221,17 @@ class DragDropHelper {
     }
 
     if (categoryIndex !== undefined) {
-      return { i: categoryIndex, j: taskIndex }
+      this.hoveredCategoryIndex = categoryIndex
+      this.hoveredTaskIndex = taskIndex
     } else {
-      return { i: undefined, j: undefined }
+      this.hoveredCategoryIndex = undefined
+      this.hoveredTaskIndex = undefined
     }
   }
 
   private cleanUp() {
     if (this.draggedElement) {
+      this.draggedElement.classList.remove('released')
       this.draggedElement.style.left = null
       this.draggedElement.style.top = null
       this.draggedElement.style.width = null
@@ -227,9 +241,8 @@ class DragDropHelper {
       this.boardElement.style.height = null
     }
 
-    this.hoverStartX = undefined
-    this.hoverStartY = undefined
-    this.endPhase = false
+    this.hoveredCategoryIndex = undefined
+    this.hoveredTaskIndex = undefined
   }
 }
 

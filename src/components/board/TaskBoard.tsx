@@ -6,8 +6,13 @@ import TaskDragHelper from './TaskDragHelper'
 import Placeholder from './Placeholder'
 import './TaskBoard.scss'
 
+interface TaskBoardProps {
+  data: Category[]
+  onChange: (data: Category[]) => void
+}
+
 interface TaskBoardState {
-  categories: Category[]
+  dataSnapshot?: Category[]
   dragState?: {
     draggedTaskId: string
     draggedTaskIndex: number
@@ -16,10 +21,11 @@ interface TaskBoardState {
     hoveredCategoryIndex?: number
     hoveredTaskIndex?: number
   }
+  dropping: boolean
 }
 
-class TaskBoard extends React.Component<{}, TaskBoardState> {
-  public state: TaskBoardState = { categories: initialState.categories }
+class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
+  public readonly state: TaskBoardState = { dropping: false }
 
   private rootElement!: HTMLDivElement
   private dragHelper = new TaskDragHelper()
@@ -27,14 +33,16 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
   public componentDidMount() {
     this.dragHelper.setOnStart(this.handleDragStart)
     this.dragHelper.setOnHover(this.handleDragHover)
+    this.dragHelper.setOnDrop(this.handleDragDrop)
     this.dragHelper.setOnEnd(this.handleDragEnd)
   }
 
   public render() {
-    const { categories, dragState } = this.state
+    const { data } = this.props
+    const { dataSnapshot, dragState, dropping } = this.state
     return (
-      <div className="task-board" ref={e => (this.rootElement = e as HTMLDivElement)}>
-        {categories.map((c, i) => {
+      <div className={'task-board' + (dropping ? ' dropping' : '')} ref={e => (this.rootElement = e as HTMLDivElement)}>
+        {(dataSnapshot || data).map((c, i) => {
           const categoryHovered = dragState && dragState.hoveredCategoryIndex === i
           return (
             <div key={c.id} className="category">
@@ -131,6 +139,7 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
         hoveredCategoryIndex,
         hoveredTaskIndex,
       },
+      dataSnapshot: this.props.data,
     })
   }
 
@@ -141,8 +150,13 @@ class TaskBoard extends React.Component<{}, TaskBoardState> {
     }
   }
 
+  private handleDragDrop = () => {
+    this.setState({ dropping: true })
+    this.props.onChange(this.props.data)
+  }
+
   private handleDragEnd = () => {
-    this.setState({ dragState: undefined })
+    this.setState({ dataSnapshot: undefined, dragState: undefined, dropping: false })
   }
 }
 

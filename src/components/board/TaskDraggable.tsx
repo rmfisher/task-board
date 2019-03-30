@@ -36,14 +36,7 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
   }
 
   public render() {
-    const { task, dragged } = this.props
-    return (
-      <TaskComponent
-        task={task}
-        className={dragged ? 'dragged' : undefined}
-        rootRef={e => (this.rootElement = e as HTMLDivElement)}
-      />
-    )
+    return <TaskComponent task={this.props.task} rootRef={e => (this.rootElement = e as HTMLDivElement)} />
   }
 
   private handleMouseDown = (e: MouseEvent) => {

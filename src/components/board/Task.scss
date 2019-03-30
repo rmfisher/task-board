@@ -14,6 +14,7 @@
     box-shadow: $shadow-1;
     overflow: hidden;
     box-sizing: border-box;
+    transition: box-shadow 180ms;
   }
 
   .description {
@@ -73,12 +74,15 @@
 
     .task-content {
       box-shadow: $shadow-3;
-      transition: box-shadow 200ms;
     }
   }
 
   &.released {
-    transition: all 200ms $bezier-1;
-    transition-property: left top;
+    transition: all 180ms $bezier-1;
+    transition-property: left, top;
+
+    .task-content {
+      box-shadow: none;
+    }
   }
 }

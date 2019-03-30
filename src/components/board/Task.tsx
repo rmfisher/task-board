@@ -10,9 +10,9 @@ interface TaskProps {
 
 class TaskComponent extends React.Component<TaskProps> {
   public render() {
-    const { task, className, rootRef } = this.props
+    const { task, rootRef } = this.props
     return (
-      <div className={'task' + (className ? ' ' + className : '')} ref={rootRef}>
+      <div className="task" ref={rootRef}>
         <div className="task-content">
           <div className="description">{task.description}</div>
           <div className={'avatar ' + task.userLabel} />
