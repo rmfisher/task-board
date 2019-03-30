@@ -1,5 +1,5 @@
 import React from 'react'
-import { Category, initialState } from '../../state'
+import { Category } from '../../state'
 import AddIcon from '../../assets/icons/AddIcon'
 import TaskDraggable from './TaskDraggable'
 import TaskDragHelper from './TaskDragHelper'
@@ -150,13 +150,37 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
     }
   }
 
-  private handleDragDrop = () => {
+  private handleDragDrop = (categoryIndex?: number, taskIndex?: number) => {
     this.setState({ dropping: true })
-    this.props.onChange(this.props.data)
+    if (categoryIndex !== undefined && taskIndex !== undefined) {
+      const { draggedCategoryIndex, draggedTaskIndex } = this.state.dragState!
+      if (draggedCategoryIndex !== categoryIndex || draggedTaskIndex !== taskIndex) {
+        this.notifyChange(draggedCategoryIndex, draggedTaskIndex, categoryIndex, taskIndex)
+      }
+    }
   }
 
   private handleDragEnd = () => {
     this.setState({ dataSnapshot: undefined, dragState: undefined, dropping: false })
+  }
+
+  // Change position from source (i, j) to destination (k, l)
+  private notifyChange(i: number, j: number, k: number, l: number) {
+    const newData = [...this.props.data]
+    if (i === k) {
+      const tasks = [...newData[i].tasks]
+      tasks.splice(l, 0, tasks.splice(j, 1)[0])
+
+      newData[i] = { ...newData[i], tasks }
+    } else {
+      const sourceTasks = [...newData[i].tasks]
+      const destinationTasks = [...newData[k].tasks]
+      destinationTasks.splice(l, 0, sourceTasks.splice(j, 1)[0])
+
+      newData[i] = { ...newData[i], tasks: sourceTasks }
+      newData[k] = { ...newData[k], tasks: destinationTasks }
+    }
+    this.props.onChange(newData)
   }
 }
 

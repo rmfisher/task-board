@@ -38,7 +38,7 @@ class DragDropHelper {
     hoveredTaskIndex?: number
   ) => void
   private onHover!: (hoveredCategoryIndex?: number, hoveredTaskIndex?: number) => void
-  private onDrop!: () => void
+  private onDrop!: (hoveredCategoryIndex?: number, hoveredTaskIndex?: number) => void
   private onEnd!: () => void
 
   public onMouseDown(
@@ -169,7 +169,7 @@ class DragDropHelper {
         this.onEnd()
       }, RELEASE_TRANSITION_DURATION)
 
-      this.onDrop()
+      this.onDrop(this.hoveredCategoryIndex, this.hoveredTaskIndex)
     }
 
     this.dragInProgress = false
