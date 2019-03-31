@@ -115,17 +115,20 @@ class DragDropHelper {
         const viewportDeltaX = this.boardViewportX - boardRect.left
         const viewportDeltaY = this.boardViewportY - boardRect.top
 
+        const xAdjusted = x + viewportDeltaX
+        const yAdjusted = y + viewportDeltaY
+
         const minX = BOARD_BOUNDS_X_INSET
         const minY = BOARD_BOUNDS_Y_INSET
         const maxX = this.boardWidth - this.width - BOARD_BOUNDS_X_INSET
         const maxY = this.boardHeight - this.height - BOARD_BOUNDS_Y_INSET
-        const clampedX = Math.max(minX, Math.min(maxX, x + viewportDeltaX))
-        const clampedY = Math.max(minY, Math.min(maxY, y + viewportDeltaY))
+        const clampedX = Math.max(minX, Math.min(maxX, xAdjusted))
+        const clampedY = Math.max(minY, Math.min(maxY, yAdjusted))
 
         this.draggedElement.style.left = clampedX + 'px'
         this.draggedElement.style.top = clampedY + 'px'
 
-        this.recordHoverLocation(clampedX, clampedY)
+        this.recordHoverLocation(clampedX, yAdjusted)
 
         if (dragJustStarted) {
           this.onStart(
