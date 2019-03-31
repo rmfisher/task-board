@@ -22,11 +22,10 @@ class Placeholder extends React.Component<PlaceholderProps, PlaceholderState> {
   public render() {
     const { expanded } = this.props
     const { height } = this.state
-    // Placeholder is a span in order to use :last-of-type CSS selector.
     return (
-      <span className={'placeholder' + (expanded ? ' expanded' : '')} style={{ height }}>
+      <div className={'placeholder' + (expanded ? ' expanded' : '')} style={{ height }}>
         <div className="placeholder-fill" />
-      </span>
+      </div>
     )
   }
 }

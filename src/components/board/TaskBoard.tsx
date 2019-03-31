@@ -96,7 +96,6 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
                   )
                 })}
               </div>
-              <div className="extra-height" aria-hidden="true" />
             </div>
           )
         })}

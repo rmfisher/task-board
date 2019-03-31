@@ -1,5 +1,5 @@
-const BOARD_BOUNDS_X_INSET = 10
-const BOARD_BOUNDS_Y_INSET = 4
+const BOARD_BOUNDS_X_INSET = 5
+const BOARD_BOUNDS_Y_INSET = 0
 const DRAG_START_THRESHOLD = 10
 const CATEGORY_SNAP_THRESHOLD = 0.45
 const MARGIN_LEFT = 16
@@ -104,7 +104,7 @@ class DragDropHelper {
         this.dragInProgress = true
         this.draggedElement.style.width = this.width + 'px'
         this.draggedElement.style.height = this.height + 'px'
-        this.boardElement.style.height = this.boardHeight + 'px'
+        this.boardElement.style.minHeight = this.boardHeight + 'px'
         dragJustStarted = true
       }
 
@@ -238,7 +238,7 @@ class DragDropHelper {
       this.draggedElement.style.height = null
     }
     if (this.boardElement) {
-      this.boardElement.style.height = null
+      this.boardElement.style.minHeight = null
     }
 
     this.hoveredCategoryIndex = undefined
