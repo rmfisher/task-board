@@ -3,7 +3,7 @@
 .placeholder {
   display: flex;
   align-items: stretch;
-  transition: height 140ms $bezier-1;
+  transition: height 140ms $bezier-1 60ms;
 
   .placeholder-fill {
     opacity: 0;
