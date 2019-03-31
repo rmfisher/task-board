@@ -33,13 +33,6 @@
     }
   }
 
-  .extra-height {
-    height: 180px;
-    min-height: 0px;
-    flex-shrink: 1;
-    visibility: hidden;
-  }
-
   &.dropping {
     pointer-events: none;
   }
