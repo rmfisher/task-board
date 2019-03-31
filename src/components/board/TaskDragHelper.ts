@@ -4,6 +4,7 @@ const DRAG_START_THRESHOLD = 10
 const CATEGORY_SNAP_THRESHOLD = 0.45
 const MARGIN_LEFT = 16
 const RELEASE_TRANSITION_DURATION = 180
+const BOARD_HEIGHT_OFFSET = 28
 
 class DragDropHelper {
   private mouseDown: boolean = false
@@ -61,7 +62,6 @@ class DragDropHelper {
       this.draggedElement = draggedElement
       this.boardElement = boardElement
       this.boardWidth = boardElement.clientWidth
-      this.boardHeight = boardElement.clientHeight
       const boardRect = boardElement.getBoundingClientRect()
       this.boardViewportX = boardRect.left
       this.boardViewportY = boardRect.top
@@ -89,6 +89,8 @@ class DragDropHelper {
           }
         }
       })
+
+      this.boardHeight = this.calculateBoardHeight()
     } else {
       this.endDrag()
     }
@@ -246,6 +248,15 @@ class DragDropHelper {
 
     this.hoveredCategoryIndex = undefined
     this.hoveredTaskIndex = undefined
+  }
+
+  private calculateBoardHeight() {
+    const maxTaskHeight = this.tasks.reduce((max, c, i) => {
+      const height = c.reduce((sum, t) => sum + t.height, 0) + this.taskLists[i]
+      return height > max ? height : max
+    }, 0)
+    const maxTaskBoardHeight = maxTaskHeight + this.draggedElement.clientHeight + BOARD_HEIGHT_OFFSET
+    return Math.max(maxTaskBoardHeight, this.boardElement.clientHeight)
   }
 }
 
