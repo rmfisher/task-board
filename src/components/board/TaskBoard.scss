@@ -5,13 +5,12 @@
   display: flex;
   box-sizing: border-box;
   position: relative;
-  overflow: hidden;
   flex-grow: 1;
 
   .category {
     min-width: 280px;
     width: 280px;
-    max-width: 400px;
+    max-width: 500px;
     flex-grow: 1;
     background-color: $bg-2;
     padding: 16px 16px 8px 16px;

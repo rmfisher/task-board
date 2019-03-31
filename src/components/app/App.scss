@@ -12,12 +12,15 @@ body {
   color: $text-1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: $bg-1;
   overflow-y: scroll;
+  overflow-x: auto;
 }
 
 #root {
   min-height: 100%;
-  background-color: $bg-1;
+  padding-top: 72px; // Offset for header.
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
 }
@@ -62,4 +65,9 @@ button {
   &.sorcerio {
     background-image: url('../../assets/images/sorcerio.png');
   }
+}
+
+.task-board-overflow-container {
+  flex-grow: 1;
+  display: flex;
 }

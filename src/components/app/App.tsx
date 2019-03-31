@@ -22,7 +22,9 @@ class App extends React.Component<{}, AppState> {
     return (
       <React.Fragment>
         <Header users={initialState.users} />
-        <TaskBoard data={this.state.data} onChange={this.handleChange} />
+        <div className="task-board-overflow-container">
+          <TaskBoard data={this.state.data} onChange={this.handleChange} />
+        </div>
       </React.Fragment>
     )
   }

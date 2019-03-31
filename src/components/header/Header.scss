@@ -1,7 +1,11 @@
 @import '../app/Variables.scss';
 
 .header {
-  position: relative;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  z-index: 10;
   background-color: white;
   display: flex;
   align-items: center;
