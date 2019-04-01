@@ -43,65 +43,59 @@ class DragDropHelper {
   private onEnd!: () => void
 
   public onMouseDown(
-    e: MouseEvent,
+    mouseX: number,
+    mouseY: number,
     draggedElement: HTMLDivElement,
     boardElement: HTMLDivElement,
     taskId: string,
     taskIndex: number,
     categoryIndex: number
   ) {
-    if (e.button === 0) {
-      e.preventDefault()
-      this.clearSelection()
+    this.clearSelection()
+    this.mouseDown = true
+    this.mouseStartX = mouseX
+    this.mouseStartY = mouseY
+    this.startX = draggedElement.offsetLeft
+    this.startY = draggedElement.offsetTop
+    this.width = draggedElement.clientWidth
+    this.height = draggedElement.clientHeight
+    this.draggedElement = draggedElement
+    this.boardElement = boardElement
+    this.boardWidth = boardElement.clientWidth
+    const boardRect = boardElement.getBoundingClientRect()
+    this.boardViewportX = boardRect.left
+    this.boardViewportY = boardRect.top
+    this.taskId = taskId
+    this.taskIndex = taskIndex
+    this.categoryIndex = categoryIndex
 
-      this.mouseDown = true
-      this.mouseStartX = e.clientX
-      this.mouseStartY = e.clientY
-      this.startX = draggedElement.offsetLeft
-      this.startY = draggedElement.offsetTop
-      this.width = draggedElement.clientWidth
-      this.height = draggedElement.clientHeight
-      this.draggedElement = draggedElement
-      this.boardElement = boardElement
-      this.boardWidth = boardElement.clientWidth
-      const boardRect = boardElement.getBoundingClientRect()
-      this.boardViewportX = boardRect.left
-      this.boardViewportY = boardRect.top
-      this.taskId = taskId
-      this.taskIndex = taskIndex
-      this.categoryIndex = categoryIndex
+    this.categories = []
+    this.tasks = []
+    this.taskLists = []
+    boardElement.childNodes.forEach((categoryElement, i) => {
+      if (categoryElement instanceof HTMLDivElement) {
+        this.categories.push({ x: categoryElement.offsetLeft, width: categoryElement.clientWidth })
 
-      this.categories = []
-      this.tasks = []
-      this.taskLists = []
-      boardElement.childNodes.forEach((categoryElement, i) => {
-        if (categoryElement instanceof HTMLDivElement) {
-          this.categories.push({ x: categoryElement.offsetLeft, width: categoryElement.clientWidth })
-
-          this.tasks[i] = []
-          categoryElement.querySelectorAll('.task').forEach((taskElement, j) => {
-            if (taskElement instanceof HTMLDivElement && taskElement !== draggedElement) {
-              this.tasks[i].push({ width: taskElement.clientWidth, height: taskElement.clientHeight })
-            }
-          })
-
-          const taskListElement = categoryElement.querySelector('.task-list')
-          if (taskListElement instanceof HTMLDivElement) {
-            this.taskLists[i] = taskListElement.offsetTop
+        this.tasks[i] = []
+        categoryElement.querySelectorAll('.task').forEach((taskElement, j) => {
+          if (taskElement instanceof HTMLDivElement && taskElement !== draggedElement) {
+            this.tasks[i].push({ width: taskElement.clientWidth, height: taskElement.clientHeight })
           }
-        }
-      })
+        })
 
-      this.boardHeight = this.calculateBoardHeight()
-    } else {
-      this.endDrag()
-    }
+        const taskListElement = categoryElement.querySelector('.task-list')
+        if (taskListElement instanceof HTMLDivElement) {
+          this.taskLists[i] = taskListElement.offsetTop
+        }
+      }
+    })
+    this.boardHeight = this.calculateBoardHeight()
   }
 
-  public onMouseMove(e: MouseEvent) {
+  public onMouseMove(mouseX: number, mouseY: number) {
     if (this.mouseDown) {
-      const deltaX = e.clientX - this.mouseStartX
-      const deltaY = e.clientY - this.mouseStartY
+      const deltaX = mouseX - this.mouseStartX
+      const deltaY = mouseY - this.mouseStartY
 
       let dragJustStarted = false
       if (!this.dragInProgress && Math.hypot(deltaX, deltaY) > DRAG_START_THRESHOLD) {

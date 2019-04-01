@@ -104,17 +104,18 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
   }
 
   private handleMouseDown = (
-    e: MouseEvent,
+    mouseX: number,
+    mouseY: number,
     draggedElement: HTMLDivElement,
     taskId: string,
     taskIndex: number,
     categoryIndex: number
   ) => {
-    this.dragHelper.onMouseDown(e, draggedElement, this.rootElement, taskId, taskIndex, categoryIndex)
+    this.dragHelper.onMouseDown(mouseX, mouseY, draggedElement, this.rootElement, taskId, taskIndex, categoryIndex)
   }
 
-  private handleMouseMove = (e: MouseEvent) => {
-    this.dragHelper.onMouseMove(e)
+  private handleMouseMove = (mouseX: number, mouseY: number) => {
+    this.dragHelper.onMouseMove(mouseX, mouseY)
   }
 
   private handleMouseUp = () => {
