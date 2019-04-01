@@ -29,6 +29,7 @@
     flex-direction: row-reverse;
     align-items: center;
     padding: 0 20px;
+    pointer-events: none;
 
     .avatar {
       border: 2px solid white;
