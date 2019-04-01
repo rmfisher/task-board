@@ -14,7 +14,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: $bg-1;
   overflow-y: scroll;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 #root {
@@ -70,4 +70,6 @@ button {
 .task-board-overflow-container {
   flex-grow: 1;
   display: flex;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch;
 }
