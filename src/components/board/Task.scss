@@ -88,3 +88,9 @@
     }
   }
 }
+
+@media screen and (max-width: 1200px) {
+  .task .labels .label {
+    min-width: 50px;
+  }
+}
