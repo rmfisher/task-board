@@ -52,6 +52,8 @@ class DragDropHelper {
   ) {
     if (e.button === 0) {
       e.preventDefault()
+      this.clearSelection()
+
       this.mouseDown = true
       this.mouseStartX = e.clientX
       this.mouseStartY = e.clientY
@@ -257,6 +259,14 @@ class DragDropHelper {
     }, 0)
     const maxTaskBoardHeight = maxTaskHeight + this.draggedElement.clientHeight + BOARD_HEIGHT_OFFSET
     return Math.max(maxTaskBoardHeight, this.boardElement.clientHeight)
+  }
+
+  private clearSelection() {
+    if (window.getSelection().empty) {
+      window.getSelection().empty()
+    } else if (window.getSelection().removeAllRanges) {
+      window.getSelection().removeAllRanges()
+    }
   }
 }
 
