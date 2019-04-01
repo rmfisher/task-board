@@ -70,6 +70,7 @@ button {
 .task-board-overflow-container {
   flex-grow: 1;
   display: flex;
-  overflow-x: scroll;
+  overflow-x: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
 }
