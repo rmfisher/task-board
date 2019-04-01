@@ -1,5 +1,3 @@
-import { initialState } from './initialState'
-
 export interface State {
   users: User[]
   categories: Category[]
