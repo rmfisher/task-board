@@ -1,5 +1,6 @@
 import React from 'react'
 import { Task } from '../../state'
+import MoreHorizIcon from '../../assets/icons/MoreHoriz'
 import './Task.scss'
 
 interface TaskProps {
@@ -8,43 +9,25 @@ interface TaskProps {
   rootRef: React.Ref<HTMLDivElement>
 }
 
-class TaskComponent extends React.Component<TaskProps> {
-  private descriptionElement!: HTMLDivElement
-
-  public componentDidMount() {
-    this.descriptionElement.addEventListener('mousedown', this.stopPropagation)
-  }
-
-  public componentWillUnmount() {
-    this.descriptionElement.removeEventListener('mousedown', this.stopPropagation)
-  }
-
-  public render() {
-    const { task, rootRef } = this.props
-    return (
-      <div className="task" ref={rootRef}>
-        <div className="task-content">
-          <div className="description" ref={e => (this.descriptionElement = e as HTMLDivElement)}>
-            {task.description}
-          </div>
-          <div className={'avatar ' + task.userLabel} />
-          <div className="labels">
-            {task.labels.map(l => (
-              <div key={l.name} className={'label ' + l.color}>
-                {l.name}
-              </div>
-            ))}
-          </div>
-        </div>
+const TaskComponent: React.FunctionComponent<TaskProps> = ({ task, rootRef }) => (
+  <div className="task" ref={rootRef}>
+    <div className="task-content">
+      <div className="top-row">
+        <div className="description">{task.description}</div>
+        <button className="plain">
+          <MoreHorizIcon />
+        </button>
       </div>
-    )
-  }
-
-  // Prevents task drag when clicking on description text and allows text selection.
-  private stopPropagation = (e: MouseEvent | TouchEvent) => {
-    // Disable text selection of task description for now.
-    // e.stopPropagation()
-  }
-}
+      <div className={'avatar ' + task.userLabel} />
+      <div className="labels">
+        {task.labels.map(l => (
+          <div key={l.name} className={'label ' + l.color}>
+            {l.name}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+)
 
 export default TaskComponent

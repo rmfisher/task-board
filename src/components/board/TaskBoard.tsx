@@ -1,6 +1,6 @@
 import React from 'react'
 import { Category } from '../../state'
-import AddIcon from '../../assets/icons/AddIcon'
+import AddIcon from '../../assets/icons/Add'
 import TaskDraggable from './TaskDraggable'
 import TaskDragHelper from './TaskDragHelper'
 import Placeholder from './Placeholder'

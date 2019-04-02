@@ -40,12 +40,15 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
-  border: none;
-  border-radius: 4px;
   padding: 5px;
+  border: none;
   outline: none;
-  box-shadow: $shadow-2;
+
+  &:not(.plain) {
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: $shadow-2;
+  }
 }
 
 .avatar {
