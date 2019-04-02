@@ -12,11 +12,11 @@ class TaskComponent extends React.Component<TaskProps> {
   private descriptionElement!: HTMLDivElement
 
   public componentDidMount() {
-    this.descriptionElement.addEventListener('mousedown', this.handleDescriptionMouseDown)
+    this.descriptionElement.addEventListener('mousedown', this.stopPropagation)
   }
 
   public componentWillUnmount() {
-    this.descriptionElement.removeEventListener('mousedown', this.handleDescriptionMouseDown)
+    this.descriptionElement.removeEventListener('mousedown', this.stopPropagation)
   }
 
   public render() {
@@ -40,7 +40,7 @@ class TaskComponent extends React.Component<TaskProps> {
     )
   }
 
-  private handleDescriptionMouseDown = (e: MouseEvent) => {
+  private stopPropagation = (e: MouseEvent | TouchEvent) => {
     e.stopPropagation() // Prevents task drag when clicking on description text and allows text selection.
   }
 }
