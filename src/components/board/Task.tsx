@@ -40,8 +40,10 @@ class TaskComponent extends React.Component<TaskProps> {
     )
   }
 
+  // Prevents task drag when clicking on description text and allows text selection.
   private stopPropagation = (e: MouseEvent | TouchEvent) => {
-    e.stopPropagation() // Prevents task drag when clicking on description text and allows text selection.
+    // Disable text selection of task description for now.
+    // e.stopPropagation()
   }
 }
 
