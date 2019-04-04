@@ -5,6 +5,10 @@ const CATEGORY_SNAP_THRESHOLD = 0.45
 const MARGIN_LEFT = 16
 const RELEASE_TRANSITION_DURATION = 180
 const BOARD_HEIGHT_OFFSET = 28
+const SCROLL_EDGE_LEFT = 10
+const SCROLL_EDGE_RIGHT = -10
+const SCROLL_EDGE_TOP = 20
+const SCROLL_EDGE_BOTTOM = 40
 
 class DragDropHelper {
   private mouseDown: boolean = false
@@ -127,6 +131,7 @@ class DragDropHelper {
         this.draggedElement.style.top = clampedY + 'px'
 
         this.recordHoverLocation(clampedX, yAdjusted)
+        this.checkForScroll()
 
         if (dragJustStarted) {
           this.onStart(
@@ -261,6 +266,29 @@ class DragDropHelper {
     } else if (window.getSelection().removeAllRanges) {
       window.getSelection().removeAllRanges()
     }
+  }
+
+  private checkForScroll = () => {
+    this.getScrollDirections()
+  }
+
+  private getScrollDirections = () => {
+    const r = this.draggedElement.getBoundingClientRect()
+    let scrollX: number = 0
+    let scrollY: number = 0
+
+    if (r.left < -SCROLL_EDGE_LEFT) {
+      scrollX = -1
+    } else if (r.right > window.innerWidth + SCROLL_EDGE_RIGHT) {
+      scrollX = 1
+    }
+
+    if (r.top < -SCROLL_EDGE_TOP) {
+      scrollY = -1
+    } else if (r.bottom > window.innerHeight + SCROLL_EDGE_BOTTOM) {
+      scrollY = 1
+    }
+    return { scrollX, scrollY }
   }
 }
 
