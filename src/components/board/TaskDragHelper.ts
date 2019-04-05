@@ -9,6 +9,7 @@ const SCROLL_EDGE_LEFT = 10
 const SCROLL_EDGE_RIGHT = -10
 const SCROLL_EDGE_TOP = 20
 const SCROLL_EDGE_BOTTOM = 40
+const SCROLL_RATE = 0.8 // Pixels per ms.
 
 class DragDropHelper {
   private mouseDown: boolean = false
@@ -33,6 +34,10 @@ class DragDropHelper {
   private taskLists!: number[]
   private hoveredCategoryIndex?: number
   private hoveredTaskIndex?: number
+  private scrollXAnimationDirection: number = 0
+  private scrollYAnimationDirection: number = 0
+  private scrollXAnimation?: { cancel: () => void }
+  private scrollYAnimation?: { cancel: () => void }
 
   private onStart!: (
     taskId: string,
@@ -178,6 +183,16 @@ class DragDropHelper {
       this.onDrop(this.hoveredCategoryIndex, this.hoveredTaskIndex)
     }
 
+    if (this.scrollXAnimation) {
+      this.scrollXAnimation.cancel()
+      this.scrollXAnimation = undefined
+    }
+    if (this.scrollYAnimation) {
+      this.scrollYAnimation.cancel()
+      this.scrollYAnimation = undefined
+    }
+    this.scrollXAnimationDirection = 0
+    this.scrollYAnimationDirection = 0
     this.dragInProgress = false
     this.mouseDown = false
   }
@@ -269,7 +284,25 @@ class DragDropHelper {
   }
 
   private checkForScroll = () => {
-    this.getScrollDirections()
+    const { scrollX, scrollY } = this.getScrollDirections()
+    if (scrollX !== this.scrollXAnimationDirection) {
+      if (this.scrollXAnimation) {
+        this.scrollXAnimation.cancel()
+      }
+      if (scrollX !== 0) {
+        this.scrollXAnimation = this.startScrollAnimation(false, scrollX > 0)
+      }
+      this.scrollXAnimationDirection = scrollX
+    }
+    if (scrollY !== this.scrollYAnimationDirection) {
+      if (this.scrollYAnimation) {
+        this.scrollYAnimation.cancel()
+      }
+      if (scrollY !== 0) {
+        this.scrollYAnimation = this.startScrollAnimation(true, scrollY > 0)
+      }
+      this.scrollYAnimationDirection = scrollY
+    }
   }
 
   private getScrollDirections = () => {
@@ -289,6 +322,22 @@ class DragDropHelper {
       scrollY = 1
     }
     return { scrollX, scrollY }
+  }
+
+  private startScrollAnimation(vertical: boolean, increasing: boolean) {
+    let cancelled = false
+    const initial = vertical ? window.scrollY : window.scrollX
+    let start: number
+    const step = (timestamp: number) => {
+      if (!cancelled) {
+        if (!start) start = timestamp
+        const amount = (timestamp - start) * SCROLL_RATE * (increasing ? 1 : -1)
+        window.scrollTo(vertical ? window.scrollX : initial + amount, vertical ? initial + amount : window.scrollY)
+        window.requestAnimationFrame(step)
+      }
+    }
+    window.requestAnimationFrame(step)
+    return { cancel: () => (cancelled = true) }
   }
 }
 
