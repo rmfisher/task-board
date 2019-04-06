@@ -3,12 +3,10 @@ const BOARD_BOUNDS_Y_INSET = 0
 const DRAG_START_THRESHOLD = 10
 const CATEGORY_SNAP_THRESHOLD = 0.45
 const MARGIN_LEFT = 16
+const TASK_PADDING = 8
 const RELEASE_TRANSITION_DURATION = 180
 const BOARD_HEIGHT_OFFSET = 28
-const SCROLL_EDGE_LEFT = 10
-const SCROLL_EDGE_RIGHT = -10
-const SCROLL_EDGE_TOP = 20
-const SCROLL_EDGE_BOTTOM = 40
+const SCROLL_THRESHOLD = 5 // Scroll if dragged task outside viewport by at least this (in px).
 const SCROLL_RATE = 0.6 // Pixels per ms.
 const SCROLL_ACCELERATION = 750 // Time in ms to reach scroll rate.
 
@@ -317,16 +315,15 @@ class DragDropHelper {
 
     let scrollX: number = 0
     let scrollY: number = 0
-
-    if (r.left + x < -SCROLL_EDGE_LEFT) {
+    if (r.left + x < -SCROLL_THRESHOLD) {
       scrollX = -1
-    } else if (r.left + this.width + x > window.innerWidth + SCROLL_EDGE_RIGHT) {
+    } else if (r.left + this.width + x > window.innerWidth + SCROLL_THRESHOLD) {
       scrollX = 1
     }
 
-    if (r.top + y < -SCROLL_EDGE_TOP) {
+    if (r.top + y + TASK_PADDING < -SCROLL_THRESHOLD) {
       scrollY = -1
-    } else if (r.top + this.height + y > window.innerHeight + SCROLL_EDGE_BOTTOM) {
+    } else if (r.top + this.height + y - TASK_PADDING > window.innerHeight + SCROLL_THRESHOLD) {
       scrollY = 1
     }
     return { scrollX, scrollY }
