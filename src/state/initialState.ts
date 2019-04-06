@@ -9,19 +9,19 @@ export const initialState: State = {
       tasks: [
         {
           id: '1',
-          description: "Undo function doesn't always work",
+          description: 'Font size is too small in registration form',
           userLabel: 'sorcerio',
           labels: [{ name: 'Low', color: 'green' }, { name: 'All', color: 'yellow' }],
         },
         {
           id: '2',
-          description: 'Search is displaying incorrect results',
+          description: 'Local storage is not cleaned up on logout',
           userLabel: 'bean',
           labels: [{ name: 'Medium', color: 'orange' }, { name: 'Chrome', color: 'lime' }],
         },
         {
           id: '3',
-          description: 'Spacing in top bar is off',
+          description: "Login doesn't work if third-party cookies are disabled",
           userLabel: 'sorcerio',
           labels: [{ name: 'Low', color: 'green' }, { name: 'IE', color: 'blue' }],
         },
@@ -33,13 +33,13 @@ export const initialState: State = {
       tasks: [
         {
           id: '4',
-          description: 'Clicking on "learn more" generates error message',
+          description: 'Items are missing from search results when filtering by date',
           userLabel: 'sorcerio',
           labels: [{ name: 'Medium', color: 'orange' }, { name: 'All', color: 'yellow' }],
         },
         {
           id: '5',
-          description: "Login button doesn't work on mobile",
+          description: 'Link clicks cause a full page reload',
           userLabel: 'sorcerio',
           labels: [{ name: 'Medium', color: 'orange' }],
         },
@@ -51,7 +51,7 @@ export const initialState: State = {
       tasks: [
         {
           id: '6',
-          description: 'iOS app crashing',
+          description: 'Apple Pay integration is broken on iOS',
           userLabel: 'bean',
           labels: [{ name: 'High', color: 'red' }],
         },
