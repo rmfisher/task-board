@@ -9,7 +9,8 @@ const SCROLL_EDGE_LEFT = 10
 const SCROLL_EDGE_RIGHT = -10
 const SCROLL_EDGE_TOP = 20
 const SCROLL_EDGE_BOTTOM = 40
-const SCROLL_RATE = 0.8 // Pixels per ms.
+const SCROLL_RATE = 0.6 // Pixels per ms.
+const SCROLL_ACCELERATION = 750 // Time in ms to reach scroll rate.
 
 class DragDropHelper {
   private mouseDown: boolean = false
@@ -338,8 +339,9 @@ class DragDropHelper {
     const step = (timestamp: number) => {
       if (!cancelled) {
         if (!start) start = timestamp
-
-        const newScroll = initial + (timestamp - start) * SCROLL_RATE * (increasing ? 1 : -1)
+        const delta = timestamp - start
+        const currentScrollRate = Math.min(Math.pow(delta / SCROLL_ACCELERATION, 2), SCROLL_RATE)
+        const newScroll = initial + delta * currentScrollRate * (increasing ? 1 : -1)
         if (vertical) {
           window.scrollTo(0, newScroll)
           this.onMouseMove(this.mouseX, this.mouseY)
