@@ -154,7 +154,7 @@ class DragDropHelper {
           this.onHover(this.hoveredCategoryIndex, this.hoveredTaskIndex)
         }
 
-        this.checkForScroll()
+        this.checkForScroll(xAdjusted, yAdjusted)
       }
     }
   }
@@ -289,8 +289,8 @@ class DragDropHelper {
     }
   }
 
-  private checkForScroll = () => {
-    const { scrollX, scrollY } = this.getScrollDirections()
+  private checkForScroll = (x: number, y: number) => {
+    const { scrollX, scrollY } = this.getScrollDirections(x, y)
     if (scrollX !== this.scrollXAnimationDirection) {
       if (this.scrollXAnimation) {
         this.scrollXAnimation.cancel()
@@ -311,20 +311,21 @@ class DragDropHelper {
     }
   }
 
-  private getScrollDirections = () => {
-    const r = this.draggedElement.getBoundingClientRect()
+  private getScrollDirections = (x: number, y: number) => {
+    const r = this.boardElement.getBoundingClientRect()
+
     let scrollX: number = 0
     let scrollY: number = 0
 
-    if (r.left < -SCROLL_EDGE_LEFT) {
+    if (r.left + x < -SCROLL_EDGE_LEFT) {
       scrollX = -1
-    } else if (r.right > window.innerWidth + SCROLL_EDGE_RIGHT) {
+    } else if (r.left + this.width + x > window.innerWidth + SCROLL_EDGE_RIGHT) {
       scrollX = 1
     }
 
-    if (r.top < -SCROLL_EDGE_TOP) {
+    if (r.top + y < -SCROLL_EDGE_TOP) {
       scrollY = -1
-    } else if (r.bottom > window.innerHeight + SCROLL_EDGE_BOTTOM) {
+    } else if (r.top + this.height + y > window.innerHeight + SCROLL_EDGE_BOTTOM) {
       scrollY = 1
     }
     return { scrollX, scrollY }
