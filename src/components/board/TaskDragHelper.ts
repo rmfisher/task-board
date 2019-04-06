@@ -38,6 +38,7 @@ class DragDropHelper {
   private scrollYAnimationDirection: number = 0
   private scrollXAnimation?: { cancel: () => void }
   private scrollYAnimation?: { cancel: () => void }
+  private horizontalScrollElement!: HTMLDivElement
 
   private onStart!: (
     taskId: string,
@@ -99,6 +100,7 @@ class DragDropHelper {
       }
     })
     this.boardHeight = this.calculateBoardHeight()
+    this.horizontalScrollElement = document.querySelector('.task-board-overflow-container') as HTMLDivElement
   }
 
   public onMouseMove(mouseX: number, mouseY: number) {
@@ -276,10 +278,12 @@ class DragDropHelper {
   }
 
   private clearSelection() {
-    if (window.getSelection().empty) {
-      window.getSelection().empty()
-    } else if (window.getSelection().removeAllRanges) {
-      window.getSelection().removeAllRanges()
+    const selection = window.getSelection()
+    if (!selection) return
+    if (selection.empty) {
+      selection.empty()
+    } else if (selection.removeAllRanges) {
+      selection.removeAllRanges()
     }
   }
 
@@ -326,13 +330,17 @@ class DragDropHelper {
 
   private startScrollAnimation(vertical: boolean, increasing: boolean) {
     let cancelled = false
-    const initial = vertical ? window.scrollY : window.scrollX
+    const initial = vertical ? window.scrollY : this.horizontalScrollElement.scrollLeft
     let start: number
     const step = (timestamp: number) => {
       if (!cancelled) {
         if (!start) start = timestamp
         const amount = (timestamp - start) * SCROLL_RATE * (increasing ? 1 : -1)
-        window.scrollTo(vertical ? window.scrollX : initial + amount, vertical ? initial + amount : window.scrollY)
+        if (vertical) {
+          window.scrollTo(0, initial + amount)
+        } else {
+          this.horizontalScrollElement.scrollTo(initial + amount, 0)
+        }
         window.requestAnimationFrame(step)
       }
     }
