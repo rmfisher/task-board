@@ -344,7 +344,7 @@ class DragDropHelper {
           window.scrollTo(0, newScroll)
           this.onMouseMove(this.mouseX, this.mouseY)
         } else {
-          this.horizontalScrollElement.scrollTo(newScroll, 0)
+          this.horizontalScrollElement.scrollTo(Math.min(newScroll, this.boardWidth - window.innerWidth), 0)
           this.onMouseMove(this.mouseX, this.mouseY)
         }
 
