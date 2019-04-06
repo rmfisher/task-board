@@ -15,6 +15,8 @@ class DragDropHelper {
   private mouseDown: boolean = false
   private mouseStartX: number = 0
   private mouseStartY: number = 0
+  private mouseX: number = 0
+  private mouseY: number = 0
   private startX: number = 0
   private startY: number = 0
   private width!: number
@@ -24,8 +26,6 @@ class DragDropHelper {
   private boardElement!: HTMLDivElement
   private boardWidth!: number
   private boardHeight!: number
-  private boardViewportX!: number
-  private boardViewportY!: number
   private taskId!: string
   private taskIndex!: number
   private categoryIndex!: number
@@ -39,6 +39,8 @@ class DragDropHelper {
   private scrollXAnimation?: { cancel: () => void }
   private scrollYAnimation?: { cancel: () => void }
   private horizontalScrollElement!: HTMLDivElement
+  private scrollXOnDragStart: number = 0
+  private scrollYOnDragStart: number = 0
 
   private onStart!: (
     taskId: string,
@@ -72,9 +74,6 @@ class DragDropHelper {
     this.draggedElement = draggedElement
     this.boardElement = boardElement
     this.boardWidth = boardElement.clientWidth
-    const boardRect = boardElement.getBoundingClientRect()
-    this.boardViewportX = boardRect.left
-    this.boardViewportY = boardRect.top
     this.taskId = taskId
     this.taskIndex = taskIndex
     this.categoryIndex = categoryIndex
@@ -101,10 +100,14 @@ class DragDropHelper {
     })
     this.boardHeight = this.calculateBoardHeight()
     this.horizontalScrollElement = document.querySelector('.task-board-overflow-container') as HTMLDivElement
+    this.scrollXOnDragStart = this.horizontalScrollElement.scrollLeft
+    this.scrollYOnDragStart = window.scrollY
   }
 
   public onMouseMove(mouseX: number, mouseY: number) {
     if (this.mouseDown) {
+      this.mouseX = mouseX
+      this.mouseY = mouseY
       const deltaX = mouseX - this.mouseStartX
       const deltaY = mouseY - this.mouseStartY
 
@@ -120,9 +123,8 @@ class DragDropHelper {
       if (this.dragInProgress) {
         const x = this.startX + deltaX
         const y = this.startY + deltaY
-        const boardRect = this.boardElement.getBoundingClientRect()
-        const viewportDeltaX = this.boardViewportX - boardRect.left
-        const viewportDeltaY = this.boardViewportY - boardRect.top
+        const viewportDeltaX = this.horizontalScrollElement.scrollLeft - this.scrollXOnDragStart
+        const viewportDeltaY = window.scrollY - this.scrollYOnDragStart
 
         const xAdjusted = x + viewportDeltaX
         const yAdjusted = y + viewportDeltaY
@@ -136,9 +138,7 @@ class DragDropHelper {
 
         this.draggedElement.style.left = clampedX + 'px'
         this.draggedElement.style.top = clampedY + 'px'
-
         this.recordHoverLocation(clampedX, yAdjusted)
-        this.checkForScroll()
 
         if (dragJustStarted) {
           this.onStart(
@@ -153,6 +153,8 @@ class DragDropHelper {
         } else {
           this.onHover(this.hoveredCategoryIndex, this.hoveredTaskIndex)
         }
+
+        this.checkForScroll()
       }
     }
   }
@@ -335,12 +337,16 @@ class DragDropHelper {
     const step = (timestamp: number) => {
       if (!cancelled) {
         if (!start) start = timestamp
-        const amount = (timestamp - start) * SCROLL_RATE * (increasing ? 1 : -1)
+
+        const newScroll = initial + (timestamp - start) * SCROLL_RATE * (increasing ? 1 : -1)
         if (vertical) {
-          window.scrollTo(0, initial + amount)
+          window.scrollTo(0, newScroll)
+          this.onMouseMove(this.mouseX, this.mouseY)
         } else {
-          this.horizontalScrollElement.scrollTo(initial + amount, 0)
+          this.horizontalScrollElement.scrollTo(newScroll, 0)
+          this.onMouseMove(this.mouseX, this.mouseY)
         }
+
         window.requestAnimationFrame(step)
       }
     }
