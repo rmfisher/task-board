@@ -9,4 +9,4 @@ This is not a fully functional app. I am mostly interested in the drag & drop be
 ## Notes
 
 * Works on touch devices, but is designed with larger screen sizes in mind (e.g. desktop or iPad).
-* The task's (x, y) coordinates during drag are not managed by React, I directly update the dom to achieve a higher framerate.
+* The task's (x, y) coordinates during drag are not managed by React. I directly update the DOM to get a higher framerate.
