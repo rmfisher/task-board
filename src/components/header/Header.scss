@@ -34,4 +34,12 @@
       margin-left: -8px;
     }
   }
+
+  @media screen and (max-width: 600px) {
+    justify-content: flex-start;
+
+    h1 {
+      padding-left: 20px;
+    }
+  }
 }
