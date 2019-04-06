@@ -8,7 +8,9 @@ interface HeaderProps {
 
 const Header: React.FunctionComponent<HeaderProps> = ({ users }) => (
   <div className="header">
-    <h1>Bug Tracking</h1>
+    <h1>
+      <a href="https://www.github.com/rmfisher/task-board">Bug Tracking</a>
+    </h1>
     <div className="avatars">
       {users.map(u => (
         <div key={u.id} className={'avatar ' + u.label} />

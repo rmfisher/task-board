@@ -15,6 +15,15 @@
     line-height: 20px;
     font-size: 20px;
     font-weight: 700;
+
+    a {
+      color: inherit !important;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   .avatars {
