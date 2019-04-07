@@ -9,7 +9,6 @@
     "@types/react": "^16.8.8",
     "@types/react-dom": "^16.8.2",
     "@types/webfontloader": "^1.6.29",
-    "easy-scroll": "^0.5.1",
     "gh-pages": "^2.0.1",
     "node-sass": "^4.11.0",
     "react": "^16.8.4",
