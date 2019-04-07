@@ -18,29 +18,6 @@
     transition: box-shadow 180ms;
   }
 
-  .top-row {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-
-    button {
-      margin: -16px -12px 0 0;
-      align-self: flex-start;
-      opacity: 0;
-      transition: opacity 200ms;
-      background-color: transparent;
-
-      .icon .fill {
-        fill: $text-3;
-      }
-    }
-  }
-
-  &:hover:not(.dragged):not(.released) .top-row button,
-  .top-row button:focus {
-    opacity: 1;
-  }
-
   .description {
     color: $text-1;
     line-height: 1.25;

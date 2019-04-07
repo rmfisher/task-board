@@ -12,12 +12,7 @@ interface TaskProps {
 const TaskComponent: React.FunctionComponent<TaskProps> = ({ task, rootRef }) => (
   <div className="task" ref={rootRef}>
     <div className="task-content">
-      <div className="top-row">
-        <div className="description">{task.description}</div>
-        <button className="plain">
-          <MoreHorizIcon />
-        </button>
-      </div>
+      <div className="description">{task.description}</div>
       <div className={'avatar ' + task.userLabel} />
       <div className="labels">
         {task.labels.map(l => (
