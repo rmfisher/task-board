@@ -81,8 +81,8 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
   }
 
   private handleTouchMove = (e: TouchEvent) => {
-    if (e.changedTouches.length > 0) {
-      this.props.onMouseMove(e.changedTouches[0].clientX, e.changedTouches[0].clientY)
+    if (e.touches.length === 0) {
+      this.props.onMouseMove(e.touches[0].clientX, e.touches[0].clientY)
     }
   }
 
