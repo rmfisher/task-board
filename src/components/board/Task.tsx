@@ -1,6 +1,5 @@
 import React from 'react'
 import { Task } from '../../state'
-import MoreHorizIcon from '../../assets/icons/MoreHoriz'
 import './Task.scss'
 
 interface TaskProps {
