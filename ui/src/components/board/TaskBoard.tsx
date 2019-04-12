@@ -47,7 +47,7 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
           return (
             <div key={c.id} className="category">
               <h2>{c.label}</h2>
-              <button className="add-button">
+              <button className="add-button" disabled>
                 <AddIcon />
               </button>
               <div className="task-list">

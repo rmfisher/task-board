@@ -16,7 +16,7 @@
     box-shadow: $shadow-1;
     overflow: hidden;
     box-sizing: border-box;
-    transition: box-shadow 180ms;
+    transition: box-shadow 180ms, transform 180ms;
   }
 
   .description {
@@ -68,6 +68,10 @@
         background-color: $red;
       }
     }
+  }
+
+  &.dragged .task-content {
+    transform: rotate(2deg);
   }
 
   &.dragged,

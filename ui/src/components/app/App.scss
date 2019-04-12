@@ -25,6 +25,7 @@ html.wf-loading {
 
 .icon .fill {
   fill: $text-2;
+  transition: fill 100ms;
 }
 
 button {
@@ -35,11 +36,20 @@ button {
   padding: 5px;
   border: none;
   outline: none;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: $shadow-2;
+  transition: all 100ms;
 
-  &:not(.plain) {
-    background-color: white;
-    border-radius: 4px;
-    box-shadow: $shadow-2;
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: $white-hover;
+    box-shadow: $shadow-2-hover;
+
+    .icon .fill {
+      fill: darken($text-2, 8%);
+    }
   }
 }
 
@@ -68,4 +78,13 @@ button {
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
+}
+
+a {
+  outline: none;
+}
+
+a:focus:not(:active) {
+  outline: 1px dashed transparentize($text-3, 0.5);
+  outline-offset: 4px;
 }
