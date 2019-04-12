@@ -1,13 +1,13 @@
 import { expect } from 'chai'
-import { dragDropRandomTasks, getTaskCount, goToTaskBoard } from './TaskBoardPage'
+import * as TaskBoardPage from './TaskBoardPage'
 
 describe('Task board', () => {
   it('works if random tasks are dragged and dropped repeatedly', () => {
-    goToTaskBoard()
+    TaskBoardPage.goToTaskBoard()
 
-    const initialTaskCount = getTaskCount()
-    dragDropRandomTasks(20)
-    const finalTaskCount = getTaskCount()
+    const initialTaskCount = TaskBoardPage.getTaskCount()
+    TaskBoardPage.dragDropRandomTasks(20)
+    const finalTaskCount = TaskBoardPage.getTaskCount()
 
     expect(finalTaskCount).to.eq(initialTaskCount)
   })
