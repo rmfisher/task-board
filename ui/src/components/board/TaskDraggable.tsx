@@ -39,7 +39,7 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
     document.removeEventListener('touchmove', this.handleTouchMove)
     window.removeEventListener('mouseup', this.handleMouseUp)
     window.removeEventListener('blur', this.handleMouseUp)
-    window.addEventListener('touchend', this.handleMouseUp)
+    window.removeEventListener('touchend', this.handleMouseUp)
   }
 
   public render() {
