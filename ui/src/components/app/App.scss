@@ -1,13 +1,6 @@
 @import './Variables.scss';
 
-html,
 body {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  padding: 0;
   font-family: $font-1;
   color: $text-1;
   -webkit-font-smoothing: antialiased;
