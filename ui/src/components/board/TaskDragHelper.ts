@@ -1,7 +1,7 @@
 const BOARD_BOUNDS_X_INSET = 8
 const BOARD_BOUNDS_Y_INSET = 0
 const DRAG_START_THRESHOLD = 10
-const CATEGORY_SNAP_THRESHOLD = 0.45
+const HORIZONTAL_DROP_THRESHOLD = 0.5
 const MARGIN_LEFT = 16
 const TASK_PADDING = 8
 const RELEASE_TRANSITION_DURATION = 180
@@ -225,7 +225,7 @@ class DragDropHelper {
       const category = this.categories[i]
       const midX = category.x + category.width / 2
       const delta = Math.abs(dragMidX - midX)
-      if (delta / category.width < CATEGORY_SNAP_THRESHOLD) {
+      if (delta / category.width < HORIZONTAL_DROP_THRESHOLD) {
         categoryIndex = i
         break
       }
