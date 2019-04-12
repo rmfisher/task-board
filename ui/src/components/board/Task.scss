@@ -1,4 +1,5 @@
 @import '../app/Variables.scss';
+@import '../app/Mixins.scss';
 
 .task {
   padding: 8px 0;
@@ -87,10 +88,10 @@
       box-shadow: none;
     }
   }
-}
 
-@media screen and (max-width: 1200px) {
-  .task .labels .label {
-    min-width: 50px;
+  @include desktop-small {
+    .labels .label {
+      min-width: 50px;
+    }
   }
 }
