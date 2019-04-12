@@ -48,7 +48,9 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
 
   private handleMouseDown = (e: MouseEvent) => {
     if (e.button === 0) {
-      e.preventDefault()
+      if (e.cancelable) {
+        e.preventDefault()
+      }
       this.props.onMouseDown(
         e.clientX,
         e.clientY,
@@ -64,7 +66,9 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
 
   private handleTouchStart = (e: TouchEvent) => {
     if (e.touches.length === 1) {
-      e.preventDefault()
+      if (e.cancelable) {
+        e.preventDefault()
+      }
       this.props.onMouseDown(
         e.touches[0].clientX,
         e.touches[0].clientY,
