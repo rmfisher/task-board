@@ -2,6 +2,7 @@ import React from 'react'
 import WebFont from 'webfontloader'
 import Header from '../header/Header'
 import TaskBoard from '../board/TaskBoard'
+import BrowserCheck from './BrowserCheck'
 import { Category, initialState } from '../../state'
 import './App.scss'
 
@@ -20,12 +21,12 @@ class App extends React.Component<{}, AppState> {
 
   public render() {
     return (
-      <React.Fragment>
+      <BrowserCheck>
         <Header users={initialState.users} />
         <div className="task-board-overflow-container">
           <TaskBoard data={this.state.data} onChange={this.handleChange} />
         </div>
-      </React.Fragment>
+      </BrowserCheck>
     )
   }
 
