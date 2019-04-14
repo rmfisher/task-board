@@ -1,5 +1,5 @@
 {
-  "main.css": "/task-board/static/css/main.198a7173.chunk.css",
+  "main.css": "/task-board/static/css/main.1b97a32f.chunk.css",
   "main.js": "/task-board/static/js/main.4483ce79.chunk.js",
   "main.js.map": "/task-board/static/js/main.4483ce79.chunk.js.map",
   "runtime~main.js": "/task-board/static/js/runtime~main.88a8fd7c.js",
@@ -7,8 +7,8 @@
   "static/js/2.78b0983c.chunk.js": "/task-board/static/js/2.78b0983c.chunk.js",
   "static/js/2.78b0983c.chunk.js.map": "/task-board/static/js/2.78b0983c.chunk.js.map",
   "index.html": "/task-board/index.html",
-  "precache-manifest.4c769097a652ccb92e66175b01799e5d.js": "/task-board/precache-manifest.4c769097a652ccb92e66175b01799e5d.js",
+  "precache-manifest.12391781505f2a2ddd856982549e262e.js": "/task-board/precache-manifest.12391781505f2a2ddd856982549e262e.js",
   "service-worker.js": "/task-board/service-worker.js",
-  "static/css/main.198a7173.chunk.css.map": "/task-board/static/css/main.198a7173.chunk.css.map",
+  "static/css/main.1b97a32f.chunk.css.map": "/task-board/static/css/main.1b97a32f.chunk.css.map",
   "static/media/App.scss": "/task-board/static/media/sorcerio.5061132b.png"
 }
