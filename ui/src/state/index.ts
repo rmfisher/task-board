@@ -1,6 +1,6 @@
 export interface State {
   users: User[]
-  categories: Category[]
+  columns: Column[]
 }
 
 export interface User {
@@ -8,7 +8,7 @@ export interface User {
   label: string
 }
 
-export interface Category {
+export interface Column {
   id: string
   label: string
   tasks: Task[]

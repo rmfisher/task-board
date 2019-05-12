@@ -5,7 +5,7 @@ import TaskComponent from './Task'
 interface TaskDraggableProps {
   task: Task
   taskIndex: number
-  categoryIndex: number
+  columnIndex: number
   dragged?: boolean
   onMouseDown: (
     mouseX: number,
@@ -13,7 +13,7 @@ interface TaskDraggableProps {
     draggedElement: HTMLDivElement,
     taskId: string,
     taskIndex: number,
-    categoryIndex: number
+    columnIndex: number
   ) => void
   onMouseMove: (mouseX: number, mouseY: number) => void
   onMouseUp: () => void
@@ -57,7 +57,7 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
         this.rootElement,
         this.props.task.id,
         this.props.taskIndex,
-        this.props.categoryIndex
+        this.props.columnIndex
       )
     } else {
       this.handleMouseUp()
@@ -75,7 +75,7 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
         this.rootElement,
         this.props.task.id,
         this.props.taskIndex,
-        this.props.categoryIndex
+        this.props.columnIndex
       )
     }
   }

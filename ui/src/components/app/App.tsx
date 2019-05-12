@@ -3,7 +3,7 @@ import WebFont from 'webfontloader'
 import Header from '../header/Header'
 import TaskBoard from '../board/TaskBoard'
 import BrowserCheck from './BrowserCheck'
-import { Category, initialState } from '../../state'
+import { Column, initialState } from '../../state'
 import './App.scss'
 
 WebFont.load({
@@ -13,11 +13,11 @@ WebFont.load({
 })
 
 interface AppState {
-  data: Category[]
+  data: Column[]
 }
 
 class App extends React.Component<{}, AppState> {
-  public readonly state: AppState = { data: initialState.categories }
+  public readonly state: AppState = { data: initialState.columns }
 
   public render() {
     return (
@@ -30,7 +30,7 @@ class App extends React.Component<{}, AppState> {
     )
   }
 
-  private handleChange = (data: Category[]) => {
+  private handleChange = (data: Column[]) => {
     this.setState({ data })
   }
 }

@@ -2,7 +2,7 @@ import { State } from '.'
 
 export const initialState: State = {
   users: [{ id: '1', label: 'sorcerio' }, { id: '2', label: 'bean' }, { id: '3', label: 'elfo' }],
-  categories: [
+  columns: [
     {
       id: '1',
       label: 'Backlog',

@@ -27,11 +27,11 @@ class DragDropHelper {
   private boardHeight!: number
   private taskId!: string
   private taskIndex!: number
-  private categoryIndex!: number
-  private categories!: Array<{ x: number; width: number }>
+  private columnIndex!: number
+  private columns!: Array<{ x: number; width: number }>
   private tasks!: Array<Array<{ width: number; height: number }>>
   private taskLists!: number[]
-  private hoveredCategoryIndex?: number
+  private hoveredColumnIndex?: number
   private hoveredTaskIndex?: number
   private scrollXAnimationDirection: number = 0
   private scrollYAnimationDirection: number = 0
@@ -45,12 +45,12 @@ class DragDropHelper {
     taskId: string,
     taskIndex: number,
     taskHeight: number,
-    categoryIndex: number,
-    hoveredCategoryIndex?: number,
+    columnIndex: number,
+    hoveredColumnIndex?: number,
     hoveredTaskIndex?: number
   ) => void
-  private onHover!: (hoveredCategoryIndex?: number, hoveredTaskIndex?: number) => void
-  private onDrop!: (hoveredCategoryIndex?: number, hoveredTaskIndex?: number) => void
+  private onHover!: (hoveredColumnIndex?: number, hoveredTaskIndex?: number) => void
+  private onDrop!: (hoveredColumnIndex?: number, hoveredTaskIndex?: number) => void
   private onEnd!: () => void
 
   public onMouseDown(
@@ -60,7 +60,7 @@ class DragDropHelper {
     boardElement: HTMLDivElement,
     taskId: string,
     taskIndex: number,
-    categoryIndex: number
+    columnIndex: number
   ) {
     this.clearSelection()
     this.mouseDown = true
@@ -75,23 +75,23 @@ class DragDropHelper {
     this.boardWidth = boardElement.clientWidth
     this.taskId = taskId
     this.taskIndex = taskIndex
-    this.categoryIndex = categoryIndex
+    this.columnIndex = columnIndex
 
-    this.categories = []
+    this.columns = []
     this.tasks = []
     this.taskLists = []
-    boardElement.childNodes.forEach((categoryElement, i) => {
-      if (categoryElement instanceof HTMLDivElement) {
-        this.categories.push({ x: categoryElement.offsetLeft, width: categoryElement.clientWidth })
+    boardElement.childNodes.forEach((columnElement, i) => {
+      if (columnElement instanceof HTMLDivElement) {
+        this.columns.push({ x: columnElement.offsetLeft, width: columnElement.clientWidth })
 
         this.tasks[i] = []
-        categoryElement.querySelectorAll('.task').forEach((taskElement, j) => {
+        columnElement.querySelectorAll('.task').forEach((taskElement, j) => {
           if (taskElement instanceof HTMLDivElement && taskElement !== draggedElement) {
             this.tasks[i].push({ width: taskElement.clientWidth, height: taskElement.clientHeight })
           }
         })
 
-        const taskListElement = categoryElement.querySelector('.task-list')
+        const taskListElement = columnElement.querySelector('.task-list')
         if (taskListElement instanceof HTMLDivElement) {
           this.taskLists[i] = taskListElement.offsetTop
         }
@@ -144,13 +144,13 @@ class DragDropHelper {
             this.taskId,
             this.taskIndex,
             this.height,
-            this.categoryIndex,
-            this.hoveredCategoryIndex,
+            this.columnIndex,
+            this.hoveredColumnIndex,
             this.hoveredTaskIndex
           )
           this.draggedElement.classList.add('dragged')
         } else {
-          this.onHover(this.hoveredCategoryIndex, this.hoveredTaskIndex)
+          this.onHover(this.hoveredColumnIndex, this.hoveredTaskIndex)
         }
 
         this.checkForScroll(xAdjusted, yAdjusted)
@@ -164,10 +164,10 @@ class DragDropHelper {
       this.draggedElement.classList.remove('dragged')
 
       let hoverStartX: number, hoverStartY: number
-      const i = this.hoveredCategoryIndex
+      const i = this.hoveredColumnIndex
       const j = this.hoveredTaskIndex
       if (i !== undefined && j !== undefined) {
-        hoverStartX = this.categories[i].x + MARGIN_LEFT
+        hoverStartX = this.columns[i].x + MARGIN_LEFT
         hoverStartY = this.tasks[i].reduce((r, t, k) => (k < j ? r + t.height : r), this.taskLists[i])
       }
 
@@ -183,7 +183,7 @@ class DragDropHelper {
         this.onEnd()
       }, RELEASE_TRANSITION_DURATION)
 
-      this.onDrop(this.hoveredCategoryIndex, this.hoveredTaskIndex)
+      this.onDrop(this.hoveredColumnIndex, this.hoveredTaskIndex)
     }
 
     if (this.scrollXAnimation) {
@@ -220,21 +220,21 @@ class DragDropHelper {
     const dragMidX = x + this.width / 2
     const dragMidY = y + this.height / 2
 
-    let categoryIndex
-    for (let i = 0; i < this.categories.length; i++) {
-      const category = this.categories[i]
-      const midX = category.x + category.width / 2
+    let columnIndex
+    for (let i = 0; i < this.columns.length; i++) {
+      const column = this.columns[i]
+      const midX = column.x + column.width / 2
       const delta = Math.abs(dragMidX - midX)
-      if (delta / category.width < HORIZONTAL_DROP_THRESHOLD) {
-        categoryIndex = i
+      if (delta / column.width < HORIZONTAL_DROP_THRESHOLD) {
+        columnIndex = i
         break
       }
     }
 
     let taskIndex = 0
-    if (categoryIndex !== undefined) {
-      const tasks = this.tasks[categoryIndex]
-      let yOffset = this.taskLists[categoryIndex]
+    if (columnIndex !== undefined) {
+      const tasks = this.tasks[columnIndex]
+      let yOffset = this.taskLists[columnIndex]
       for (let j = 0; j < tasks.length; j++) {
         const task = tasks[j]
         yOffset += task.height
@@ -244,11 +244,11 @@ class DragDropHelper {
       }
     }
 
-    if (categoryIndex !== undefined) {
-      this.hoveredCategoryIndex = categoryIndex
+    if (columnIndex !== undefined) {
+      this.hoveredColumnIndex = columnIndex
       this.hoveredTaskIndex = taskIndex
     } else {
-      this.hoveredCategoryIndex = undefined
+      this.hoveredColumnIndex = undefined
       this.hoveredTaskIndex = undefined
     }
   }
@@ -265,7 +265,7 @@ class DragDropHelper {
       this.boardElement.style.minHeight = null
     }
 
-    this.hoveredCategoryIndex = undefined
+    this.hoveredColumnIndex = undefined
     this.hoveredTaskIndex = undefined
   }
 

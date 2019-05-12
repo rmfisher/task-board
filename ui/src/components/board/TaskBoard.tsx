@@ -1,5 +1,5 @@
 import React from 'react'
-import { Category } from '../../state'
+import { Column } from '../../state'
 import AddIcon from '../../assets/icons/Add'
 import TaskDraggable from './TaskDraggable'
 import TaskDragHelper from './TaskDragHelper'
@@ -7,18 +7,18 @@ import Placeholder from './Placeholder'
 import './TaskBoard.scss'
 
 interface TaskBoardProps {
-  data: Category[]
-  onChange: (data: Category[]) => void
+  data: Column[]
+  onChange: (data: Column[]) => void
 }
 
 interface TaskBoardState {
-  dataSnapshot?: Category[]
+  dataSnapshot?: Column[]
   dragState?: {
     draggedTaskId: string
     draggedTaskIndex: number
     draggedTaskHeight: number
-    draggedCategoryIndex: number
-    hoveredCategoryIndex?: number
+    draggedColumnIndex: number
+    hoveredColumnIndex?: number
     hoveredTaskIndex?: number
   }
   dropping: boolean
@@ -43,9 +43,9 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
     return (
       <div className={'task-board' + (dropping ? ' dropping' : '')} ref={e => (this.rootElement = e as HTMLDivElement)}>
         {(dataSnapshot || data).map((c, i) => {
-          const categoryHovered = dragState && dragState.hoveredCategoryIndex === i
+          const columnHovered = dragState && dragState.hoveredColumnIndex === i
           return (
-            <div key={c.id} className="category">
+            <div key={c.id} className="column">
               <h2>{c.label}</h2>
               <button className="add-button" disabled>
                 <AddIcon />
@@ -55,16 +55,16 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
                   <Placeholder
                     key={'hover-placeholder-0'}
                     height={dragState.draggedTaskHeight}
-                    expanded={!!categoryHovered && dragState.hoveredTaskIndex === 0}
+                    expanded={!!columnHovered && dragState.hoveredTaskIndex === 0}
                   />
                 )}
                 {c.tasks.map((t, j) => {
                   let dragged, hoveredAfter
                   if (dragState) {
-                    dragged = dragState.draggedCategoryIndex === i && dragState.draggedTaskId === t.id
-                    if (categoryHovered) {
+                    dragged = dragState.draggedColumnIndex === i && dragState.draggedTaskId === t.id
+                    if (columnHovered) {
                       if (
-                        dragState.draggedCategoryIndex === i &&
+                        dragState.draggedColumnIndex === i &&
                         dragState.draggedTaskIndex < dragState.hoveredTaskIndex!
                       ) {
                         hoveredAfter = dragState.hoveredTaskIndex === j
@@ -79,7 +79,7 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
                         key={t.id}
                         task={t}
                         taskIndex={j}
-                        categoryIndex={i}
+                        columnIndex={i}
                         dragged={dragged}
                         onMouseDown={this.handleMouseDown}
                         onMouseMove={this.handleMouseMove}
@@ -109,9 +109,9 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
     draggedElement: HTMLDivElement,
     taskId: string,
     taskIndex: number,
-    categoryIndex: number
+    columnIndex: number
   ) => {
-    this.dragHelper.onMouseDown(mouseX, mouseY, draggedElement, this.rootElement, taskId, taskIndex, categoryIndex)
+    this.dragHelper.onMouseDown(mouseX, mouseY, draggedElement, this.rootElement, taskId, taskIndex, columnIndex)
   }
 
   private handleMouseMove = (mouseX: number, mouseY: number) => {
@@ -126,8 +126,8 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
     draggedTaskId: string,
     draggedTaskIndex: number,
     draggedTaskHeight: number,
-    draggedCategoryIndex: number,
-    hoveredCategoryIndex: number,
+    draggedColumnIndex: number,
+    hoveredColumnIndex: number,
     hoveredTaskIndex: number
   ) => {
     this.setState({
@@ -135,27 +135,27 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
         draggedTaskId,
         draggedTaskIndex,
         draggedTaskHeight,
-        draggedCategoryIndex,
-        hoveredCategoryIndex,
+        draggedColumnIndex,
+        hoveredColumnIndex,
         hoveredTaskIndex,
       },
       dataSnapshot: this.props.data,
     })
   }
 
-  private handleDragHover = (hoveredCategoryIndex?: number, hoveredTaskIndex?: number) => {
+  private handleDragHover = (hoveredColumnIndex?: number, hoveredTaskIndex?: number) => {
     const { dragState } = this.state
-    if (hoveredCategoryIndex !== dragState!.hoveredCategoryIndex || hoveredTaskIndex !== dragState!.hoveredTaskIndex) {
-      this.setState({ dragState: { ...dragState!, hoveredCategoryIndex, hoveredTaskIndex } })
+    if (hoveredColumnIndex !== dragState!.hoveredColumnIndex || hoveredTaskIndex !== dragState!.hoveredTaskIndex) {
+      this.setState({ dragState: { ...dragState!, hoveredColumnIndex, hoveredTaskIndex } })
     }
   }
 
-  private handleDragDrop = (categoryIndex?: number, taskIndex?: number) => {
+  private handleDragDrop = (columnIndex?: number, taskIndex?: number) => {
     this.setState({ dropping: true })
-    if (categoryIndex !== undefined && taskIndex !== undefined) {
-      const { draggedCategoryIndex, draggedTaskIndex } = this.state.dragState!
-      if (draggedCategoryIndex !== categoryIndex || draggedTaskIndex !== taskIndex) {
-        this.notifyChange(draggedCategoryIndex, draggedTaskIndex, categoryIndex, taskIndex)
+    if (columnIndex !== undefined && taskIndex !== undefined) {
+      const { draggedColumnIndex, draggedTaskIndex } = this.state.dragState!
+      if (draggedColumnIndex !== columnIndex || draggedTaskIndex !== taskIndex) {
+        this.notifyChange(draggedColumnIndex, draggedTaskIndex, columnIndex, taskIndex)
       }
     }
   }
