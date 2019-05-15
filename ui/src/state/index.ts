@@ -17,8 +17,9 @@ export interface Column {
 export interface Task {
   id: string
   description: string
-  userLabel: string
   labels: Label[]
+  userLabel?: string
+  creating?: boolean
 }
 
 export interface Label {

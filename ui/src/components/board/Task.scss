@@ -70,6 +70,18 @@
     }
   }
 
+  @include desktop-small {
+    .labels .label {
+      min-width: 50px;
+    }
+  }
+}
+
+.task-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+
   &.dragged .task-content {
     transform: rotate(2deg);
   }
@@ -93,9 +105,18 @@
     }
   }
 
-  @include desktop-small {
-    .labels .label {
-      min-width: 50px;
+  &.creating:not(.dragged):not(.released) {
+    &:not(:last-child) {
+      transition: height 260ms $bezier-1, padding 260ms $bezier-1, opacity 260ms $bezier-1 120ms;
+    }
+
+    &:last-child {
+      transition: opacity 160ms $bezier-1;
+    }
+
+    &.zero-height {
+      opacity: 0;
+      padding: 0;
     }
   }
 }

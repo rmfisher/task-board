@@ -3,7 +3,6 @@ const BOARD_BOUNDS_Y_INSET = 0
 const DRAG_START_THRESHOLD = 10
 const HORIZONTAL_DROP_THRESHOLD = 0.5
 const MARGIN_LEFT = 16
-const TASK_PADDING = 8
 const RELEASE_TRANSITION_DURATION = 180
 const BOARD_HEIGHT_OFFSET = 28
 const SCROLL_THRESHOLD = 5 // Scroll if dragged task outside viewport by at least this (in px).
@@ -85,7 +84,7 @@ class DragDropHelper {
         this.columns.push({ x: columnElement.offsetLeft, width: columnElement.clientWidth })
 
         this.tasks[i] = []
-        columnElement.querySelectorAll('.task').forEach((taskElement, j) => {
+        columnElement.querySelectorAll('.task-container').forEach((taskElement, j) => {
           if (taskElement instanceof HTMLDivElement && taskElement !== draggedElement) {
             this.tasks[i].push({ width: taskElement.clientWidth, height: taskElement.clientHeight })
           }
@@ -149,6 +148,7 @@ class DragDropHelper {
             this.hoveredTaskIndex
           )
           this.draggedElement.classList.add('dragged')
+          this.draggedElement.classList.remove('creating')
         } else {
           this.onHover(this.hoveredColumnIndex, this.hoveredTaskIndex)
         }
@@ -321,9 +321,9 @@ class DragDropHelper {
       scrollX = 1
     }
 
-    if (r.top + y + TASK_PADDING < -SCROLL_THRESHOLD) {
+    if (r.top + y < -SCROLL_THRESHOLD) {
       scrollY = -1
-    } else if (r.top + this.height + y - TASK_PADDING > window.innerHeight + SCROLL_THRESHOLD) {
+    } else if (r.top + this.height + y > window.innerHeight + SCROLL_THRESHOLD) {
       scrollY = 1
     }
     return { scrollX, scrollY }
