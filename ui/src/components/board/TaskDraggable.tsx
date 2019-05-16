@@ -49,6 +49,7 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
   private handleMouseDown = (e: MouseEvent) => {
     if (e.button === 0) {
       if (e.cancelable) {
+        console.log('Prevent default')
         e.preventDefault()
       }
       this.props.onMouseDown(

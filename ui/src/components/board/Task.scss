@@ -70,6 +70,14 @@
     }
   }
 
+  textarea {
+    resize: none;
+    outline: none;
+    border: none;
+    padding: none;
+    width: 100%;
+  }
+
   @include desktop-small {
     .labels .label {
       min-width: 50px;

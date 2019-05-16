@@ -10,6 +10,7 @@ interface TaskProps {
 
 class TaskComponent extends React.PureComponent<TaskProps> {
   private rootElement!: HTMLDivElement
+  private textareaElement: HTMLTextAreaElement | null = null
 
   public componentDidMount() {
     if (this.props.task.creating) {
@@ -30,8 +31,12 @@ class TaskComponent extends React.PureComponent<TaskProps> {
       >
         <div className="task">
           <div className="task-content">
-            <div className="description">{task.description}</div>
-            <div className={'avatar ' + task.userLabel} />
+            {task.editing ? (
+              <textarea spellCheck={false} ref={this.handleTextareaElementSet} />
+            ) : (
+              <div className="description">{task.description}</div>
+            )}
+            {task.userLabel && <div className={'avatar ' + task.userLabel} />}
             <div className="labels">
               {task.labels.map(l => (
                 <div key={l.name} className={'label ' + l.color}>
@@ -54,6 +59,18 @@ class TaskComponent extends React.PureComponent<TaskProps> {
       this.rootElement.classList.remove('zero-height')
     }, 1)
   }
+
+  private handleTextareaElementSet = (e: HTMLTextAreaElement) => {
+    if (this.textareaElement) {
+      this.textareaElement.removeEventListener('mousedown', this.stopPropagation)
+    }
+    this.textareaElement = e
+    if (this.textareaElement) {
+      this.textareaElement.addEventListener('mousedown', this.stopPropagation)
+    }
+  }
+
+  private stopPropagation = (e: MouseEvent) => e.stopPropagation()
 }
 
 export default TaskComponent

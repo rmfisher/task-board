@@ -2,6 +2,7 @@
 
 body {
   font-family: $font-1;
+  font-size: 16px;
   color: $text-1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -91,4 +92,11 @@ a {
 a:focus:not(:active) {
   outline: 1px dashed transparentize($text-3, 0.5);
   outline-offset: 4px;
+}
+
+input,
+textarea {
+  font-family: $font-1;
+  font-size: 16px;
+  color: $text-1;
 }

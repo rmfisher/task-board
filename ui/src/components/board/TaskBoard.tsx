@@ -1,6 +1,6 @@
 import React from 'react'
 import { v1 as uuid } from 'uuid'
-import { Column } from '../../state'
+import { Column, Task } from '../../state'
 import AddIcon from '../../assets/icons/Add'
 import TaskDraggable from './TaskDraggable'
 import TaskDragHelper from './TaskDragHelper'
@@ -131,7 +131,7 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
     hoveredColumnIndex: number,
     hoveredTaskIndex: number
   ) => {
-    this.stopCreating(draggedColumnIndex, draggedTaskIndex)
+    this.stopEdits(draggedColumnIndex, draggedTaskIndex)
     this.setState({
       dragState: {
         draggedTaskId,
@@ -186,7 +186,7 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
   }
 
   private addTask = (index: number) => {
-    const newTask = { id: uuid(), description: '', labels: [], creating: true }
+    const newTask = { id: uuid(), description: '', labels: [], creating: true, editing: true }
     const newData = [...this.props.data]
     const newColumn = { ...newData[index], tasks: [newTask, ...newData[index].tasks] }
     newData[index] = newColumn
@@ -194,14 +194,18 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
     this.props.onChange(newData)
   }
 
-  private stopCreating = (i: number, j: number) => {
+  private stopEdits = (i: number, j: number) => {
     const task = this.props.data[i].tasks[j]
-    if (task.creating) {
-      const newData = [...this.props.data]
-      newData[i].tasks = [...this.props.data[i].tasks]
-      newData[i].tasks[j] = { ...task, creating: false }
-      this.props.onChange(newData)
+    if (task.creating || task.editing) {
+      this.updateTask(i, j, { ...task, creating: false, editing: false })
     }
+  }
+
+  private updateTask = (i: number, j: number, newTask: Task) => {
+    const newData = [...this.props.data]
+    newData[i].tasks = [...this.props.data[i].tasks]
+    newData[i].tasks[j] = newTask
+    this.props.onChange(newData)
   }
 }
 

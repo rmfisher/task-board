@@ -20,6 +20,7 @@ export interface Task {
   labels: Label[]
   userLabel?: string
   creating?: boolean
+  editing?: boolean
 }
 
 export interface Label {
