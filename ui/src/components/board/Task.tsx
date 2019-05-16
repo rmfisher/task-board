@@ -15,6 +15,15 @@ class TaskComponent extends React.PureComponent<TaskProps> {
   public componentDidMount() {
     if (this.props.task.creating) {
       this.fadeIn()
+      this.rootElement.addEventListener(
+        'transitionend',
+        () => {
+          if (this.textareaElement) {
+            this.textareaElement.focus()
+          }
+        },
+        { once: true }
+      )
     }
   }
 
