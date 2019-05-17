@@ -2,37 +2,49 @@ import React from 'react'
 import { Task } from '../../state'
 import './Task.scss'
 
+const FADE_IN_DURATION = 260
+const FADE_OUT_DURATION = FADE_IN_DURATION + 120
+
 interface TaskProps {
   task: Task
-  className?: string
   rootRef: React.Ref<HTMLDivElement>
+  remove: () => void
 }
 
-class TaskComponent extends React.PureComponent<TaskProps> {
+interface TaskState {
+  created: boolean
+}
+
+class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
+  public readonly state = { created: false }
   private rootElement!: HTMLDivElement
   private textareaElement: HTMLTextAreaElement | null = null
 
   public componentDidMount() {
     if (this.props.task.creating) {
-      this.fadeIn()
-      this.rootElement.addEventListener(
-        'transitionend',
-        () => {
-          if (this.textareaElement) {
-            this.textareaElement.focus()
-          }
-        },
-        { once: true }
-      )
+      setTimeout(() => this.setState({ created: true }), 1)
+      setTimeout(() => {
+        if (this.textareaElement) {
+          this.textareaElement.focus()
+        }
+      }, FADE_IN_DURATION)
     }
   }
 
   public render() {
     const { task, rootRef } = this.props
+    const { created } = this.state
+    const style = task.creating ? { height: created ? this.rootElement.scrollHeight : 0 } : undefined
     const refFunc = rootRef as any
     return (
       <div
-        className="task-container"
+        className={
+          'task-container' +
+          (task.creating ? ' creating' : '') +
+          (created ? ' created' : '') +
+          (task.editing ? ' editing' : '')
+        }
+        style={style}
         ref={e => {
           this.rootElement = e as HTMLDivElement
           refFunc(e)
@@ -41,7 +53,7 @@ class TaskComponent extends React.PureComponent<TaskProps> {
         <div className="task">
           <div className="task-content">
             {task.editing ? (
-              <textarea spellCheck={false} ref={this.handleTextareaElementSet} />
+              <textarea spellCheck={false} ref={this.handleTextareaSet} onBlur={this.handleBlur} />
             ) : (
               <div className="description">{task.description}</div>
             )}
@@ -59,23 +71,26 @@ class TaskComponent extends React.PureComponent<TaskProps> {
     )
   }
 
-  private fadeIn() {
-    this.rootElement.style.height = '0'
-    this.rootElement.classList.add('creating')
-    this.rootElement.classList.add('zero-height')
+  private fadeOut() {
+    this.setState({ created: false })
     setTimeout(() => {
-      this.rootElement.style.height = this.rootElement.scrollHeight + 'px'
-      this.rootElement.classList.remove('zero-height')
-    }, 1)
+      this.props.remove()
+    }, FADE_OUT_DURATION)
   }
 
-  private handleTextareaElementSet = (e: HTMLTextAreaElement) => {
+  private handleTextareaSet = (e: HTMLTextAreaElement) => {
     if (this.textareaElement) {
       this.textareaElement.removeEventListener('mousedown', this.stopPropagation)
     }
     this.textareaElement = e
     if (this.textareaElement) {
       this.textareaElement.addEventListener('mousedown', this.stopPropagation)
+    }
+  }
+
+  private handleBlur = () => {
+    if (this.props.task.creating && !this.props.task.description) {
+      this.fadeOut()
     }
   }
 

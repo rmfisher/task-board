@@ -45,10 +45,11 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
       <div className={'task-board' + (dropping ? ' dropping' : '')} ref={e => (this.rootElement = e as HTMLDivElement)}>
         {(dataSnapshot || data).map((c, i) => {
           const columnHovered = dragState && dragState.hoveredColumnIndex === i
+          const columnCreating = c.tasks.some(t => !!t.creating)
           return (
             <div key={c.id} className="column">
               <h2>{c.label}</h2>
-              <button className="add-button" onClick={() => this.addTask(i)}>
+              <button className="add-button" onClick={() => this.addTask(i)} disabled={columnCreating}>
                 <AddIcon />
               </button>
               <div className="task-list">
@@ -85,6 +86,7 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
                         onMouseDown={this.handleMouseDown}
                         onMouseMove={this.handleMouseMove}
                         onMouseUp={this.handleMouseUp}
+                        remove={this.removeTask}
                       />
                       {dragState && t.id !== dragState.draggedTaskId && (
                         <Placeholder
@@ -185,12 +187,19 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
     this.props.onChange(newData)
   }
 
-  private addTask = (index: number) => {
+  private addTask = (i: number) => {
     const newTask = { id: uuid(), description: '', labels: [], creating: true, editing: true }
     const newData = [...this.props.data]
-    const newColumn = { ...newData[index], tasks: [newTask, ...newData[index].tasks] }
-    newData[index] = newColumn
+    const newColumn = { ...newData[i], tasks: [newTask, ...newData[i].tasks] }
+    newData[i] = newColumn
 
+    this.props.onChange(newData)
+  }
+
+  private removeTask = (i: number, j: number) => {
+    const newData = [...this.props.data]
+    newData[i].tasks = [...newData[i].tasks]
+    newData[i].tasks.splice(j, 1)
     this.props.onChange(newData)
   }
 
@@ -203,7 +212,7 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
 
   private updateTask = (i: number, j: number, newTask: Task) => {
     const newData = [...this.props.data]
-    newData[i].tasks = [...this.props.data[i].tasks]
+    newData[i].tasks = [...newData[i].tasks]
     newData[i].tasks[j] = newTask
     this.props.onChange(newData)
   }

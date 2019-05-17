@@ -114,18 +114,27 @@
     }
   }
 
-  &.creating:not(.dragged):not(.released) {
-    &:not(:last-child) {
-      transition: height 260ms $bezier-1, padding 260ms $bezier-1, opacity 260ms $bezier-1 120ms;
-    }
+  &.creating {
+    overflow: hidden;
+    $duration: 260ms;
+    $delay: 120ms;
+    opacity: 0;
 
     &:last-child {
-      transition: opacity 160ms $bezier-1;
+      transition: opacity $duration $bezier-1;
+      height: auto !important;
     }
 
-    &.zero-height {
-      opacity: 0;
-      padding: 0;
+    &:not(:last-child) {
+      transition: height $duration $bezier-1 $delay, padding $duration $bezier-1 $delay, opacity $duration $bezier-1;
+    }
+
+    &.created {
+      opacity: 1;
+
+      &:not(:last-child) {
+        transition: height $duration $bezier-1, padding $duration $bezier-1, opacity $duration $bezier-1 $delay;
+      }
     }
   }
 }
