@@ -29,6 +29,10 @@
     .add-button {
       width: 100%;
       margin-bottom: 8px;
+
+      svg {
+        pointer-events: none;
+      }
     }
   }
 

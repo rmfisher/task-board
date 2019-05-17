@@ -46,7 +46,7 @@ button {
   box-shadow: $shadow-2;
   transition: all 100ms;
 
-  &:hover,
+  &:hover:not(:disabled),
   &:focus,
   &:active {
     background-color: $white-hover;
