@@ -17,6 +17,7 @@ interface TaskDraggableProps {
   ) => void
   onMouseMove: (mouseX: number, mouseY: number) => void
   onMouseUp: () => void
+  onChange: (columnIndex: number, taskIndex: number, task: Task) => void
   remove: (columnIndex: number, taskIndex: number) => void
 }
 
@@ -44,7 +45,14 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
   }
 
   public render() {
-    return <TaskComponent task={this.props.task} remove={this.handleRemove} rootRef={this.handleRef} />
+    return (
+      <TaskComponent
+        task={this.props.task}
+        elementRef={this.handleRef}
+        onChange={this.handleChange}
+        remove={this.handleRemove}
+      />
+    )
   }
 
   private handleMouseDown = (e: MouseEvent) => {
@@ -95,7 +103,11 @@ class TaskDraggable extends React.Component<TaskDraggableProps> {
     this.props.onMouseUp()
   }
 
-  private handleRef = (e: any) => (this.rootElement = e as HTMLDivElement)
+  private handleRef = (e: HTMLDivElement | null) => (this.rootElement = e as HTMLDivElement)
+
+  private handleChange = (task: Task) => {
+    this.props.onChange(this.props.columnIndex, this.props.taskIndex, task)
+  }
 
   private handleRemove = () => {
     this.props.remove(this.props.columnIndex, this.props.taskIndex)

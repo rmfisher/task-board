@@ -19,10 +19,34 @@
     transition: box-shadow 180ms, transform 180ms;
   }
 
-  .description {
-    color: $text-1;
-    line-height: 1.25;
+  .text-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     margin-bottom: 10px;
+
+    .description {
+      color: $text-1;
+      white-space: pre-wrap;
+      line-height: 1.25;
+      min-height: 20px;
+    }
+
+    textarea {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      padding: 0;
+      resize: none;
+      outline: none;
+      border: none;
+      overflow: hidden;
+      line-height: 1.25;
+      width: 100%;
+    }
   }
 
   .labels {
@@ -68,15 +92,6 @@
         background-color: $red;
       }
     }
-  }
-
-  textarea {
-    resize: none;
-    outline: none;
-    border: none;
-    padding: 0;
-    line-height: 1.25;
-    width: 100%;
   }
 
   @include desktop-small {
@@ -129,12 +144,16 @@
       transition: height $duration $bezier-1 $delay, padding $duration $bezier-1 $delay, opacity $duration $bezier-1;
     }
 
-    &.created {
+    &.mounted {
       opacity: 1;
 
       &:not(:last-child) {
         transition: height $duration $bezier-1, padding $duration $bezier-1, opacity $duration $bezier-1 $delay;
       }
     }
+  }
+
+  &:not(.editing) textarea {
+    visibility: hidden;
   }
 }

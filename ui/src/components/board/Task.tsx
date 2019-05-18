@@ -7,56 +7,59 @@ const FADE_OUT_DURATION = FADE_IN_DURATION + 120
 
 interface TaskProps {
   task: Task
-  rootRef: React.Ref<HTMLDivElement>
+  elementRef: any
+  onChange: (task: Task) => void
   remove: () => void
 }
 
 interface TaskState {
-  created: boolean
+  mounted: boolean
+  height: number | null
 }
 
 class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
-  public readonly state = { created: false }
+  public readonly state = { mounted: false, height: 0 }
   private rootElement!: HTMLDivElement
   private textareaElement: HTMLTextAreaElement | null = null
 
   public componentDidMount() {
     if (this.props.task.creating) {
-      setTimeout(() => this.setState({ created: true }), 1)
-      setTimeout(() => {
-        if (this.textareaElement) {
-          this.textareaElement.focus()
-        }
-      }, FADE_IN_DURATION)
+      this.fadeIn()
     }
   }
 
   public render() {
-    const { task, rootRef } = this.props
-    const { created } = this.state
-    const style = task.creating ? { height: created ? this.rootElement.scrollHeight : 0 } : undefined
-    const refFunc = rootRef as any
+    const { task, elementRef } = this.props
+    const { mounted, height } = this.state
+    const style = task.creating && height !== null ? { height } : undefined
     return (
       <div
         className={
           'task-container' +
           (task.creating ? ' creating' : '') +
-          (created ? ' created' : '') +
+          (mounted ? ' mounted' : '') +
           (task.editing ? ' editing' : '')
         }
         style={style}
         ref={e => {
           this.rootElement = e as HTMLDivElement
-          refFunc(e)
+          elementRef(e)
         }}
       >
         <div className="task">
           <div className="task-content">
-            {task.editing ? (
-              <textarea spellCheck={false} ref={this.handleTextareaSet} onBlur={this.handleBlur} />
-            ) : (
+            <div className="text-container">
               <div className="description">{task.description}</div>
-            )}
+              {task.editing && (
+                <textarea
+                  spellCheck={false}
+                  value={task.description}
+                  onChange={this.handleTextChange}
+                  ref={this.handleTextarea}
+                  onBlur={this.handleBlur}
+                />
+              )}
+            </div>
             {task.userLabel && <div className={'avatar ' + task.userLabel} />}
             <div className="labels">
               {task.labels.map(l => (
@@ -71,14 +74,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
     )
   }
 
-  private fadeOut() {
-    this.setState({ created: false })
-    setTimeout(() => {
-      this.props.remove()
-    }, FADE_OUT_DURATION)
-  }
-
-  private handleTextareaSet = (e: HTMLTextAreaElement) => {
+  private handleTextarea = (e: HTMLTextAreaElement | null) => {
     if (this.textareaElement) {
       this.textareaElement.removeEventListener('mousedown', this.stopPropagation)
     }
@@ -88,10 +84,45 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
     }
   }
 
+  private handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { task, onChange } = this.props
+    const value = e.target.value
+    const description = value.endsWith('\n') ? value.substring(0, value.length - 1) : value
+    onChange({ ...task, description })
+  }
+
   private handleBlur = () => {
-    if (this.props.task.creating && !this.props.task.description) {
-      this.fadeOut()
+    const { task, onChange } = this.props
+    if (task.creating) {
+      if (!task.description) {
+        this.fadeOut()
+      }
+      if (task.editing) {
+        onChange({ ...task, editing: false, creating: false })
+      }
+    } else if (task.editing) {
+      onChange({ ...task, editing: false })
     }
+  }
+
+  private fadeIn() {
+    setTimeout(() => this.setState({ mounted: true, height: this.rootElement.scrollHeight }), 1)
+    setTimeout(() => {
+      if (this.textareaElement) {
+        this.textareaElement.focus()
+      }
+      this.setState({ height: null })
+    }, FADE_IN_DURATION)
+  }
+
+  private fadeOut() {
+    this.setState({ height: this.rootElement.scrollHeight })
+    setTimeout(() => {
+      this.setState({ mounted: false, height: 0 })
+      setTimeout(() => {
+        this.props.remove()
+      }, FADE_OUT_DURATION)
+    }, 1)
   }
 
   private stopPropagation = (e: MouseEvent) => e.stopPropagation()

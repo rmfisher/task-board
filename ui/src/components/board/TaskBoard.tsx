@@ -86,6 +86,7 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
                         onMouseDown={this.handleMouseDown}
                         onMouseMove={this.handleMouseMove}
                         onMouseUp={this.handleMouseUp}
+                        onChange={this.updateTask}
                         remove={this.removeTask}
                       />
                       {dragState && t.id !== dragState.draggedTaskId && (
