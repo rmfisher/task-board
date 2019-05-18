@@ -99,4 +99,8 @@ textarea {
   font-family: $font-1;
   font-size: 16px;
   color: $text-1;
+
+  &::placeholder {
+    color: $text-3;
+  }
 }
