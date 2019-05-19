@@ -45,6 +45,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
           this.rootElement = e as HTMLDivElement
           elementRef(e)
         }}
+        onDoubleClick={this.handleDoubleClick}
       >
         <div className="task">
           <div className="task-content">
@@ -55,6 +56,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
                   spellCheck={false}
                   value={task.description}
                   onChange={this.handleTextChange}
+                  onKeyPress={this.handleKeyPress}
                   ref={this.handleTextarea}
                   onBlur={this.handleBlur}
                 />
@@ -81,6 +83,9 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
     this.textareaElement = e
     if (this.textareaElement) {
       this.textareaElement.addEventListener('mousedown', this.stopPropagation)
+      if (!this.props.task.creating) {
+        this.textareaElement.focus()
+      }
     }
   }
 
@@ -91,13 +96,26 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
     onChange({ ...task, description })
   }
 
+  private handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' || e.keyCode === 13) {
+      const { task, onChange } = this.props
+      onChange({ ...task, editing: false, creating: false })
+    }
+  }
+
+  private handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const { task, onChange } = this.props
+    if (!task.editing) {
+      onChange({ ...task, editing: true })
+    }
+  }
+
   private handleBlur = () => {
     const { task, onChange } = this.props
     if (task.creating) {
       if (!task.description) {
         this.fadeOut()
-      }
-      if (task.editing) {
+      } else if (task.editing) {
         onChange({ ...task, editing: false, creating: false })
       }
     } else if (task.editing) {
