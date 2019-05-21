@@ -151,10 +151,6 @@
         transition: height $duration $bezier-1, padding $duration $bezier-1, opacity $duration $bezier-1 $delay;
       }
     }
-
-    .task-content {
-      cursor: default;
-    }
   }
 
   &:not(.editing) textarea {

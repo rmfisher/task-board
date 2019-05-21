@@ -113,7 +113,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
   private handleBlur = () => {
     const { task, onChange } = this.props
     if (task.creating) {
-      if (!task.description) {
+      if (!task.description && !task.userLabel && task.labels.length === 0) {
         this.fadeOut()
       } else if (task.editing) {
         onChange({ ...task, editing: false, creating: false })
