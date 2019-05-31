@@ -161,7 +161,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
       setTimeout(() => {
         this.props.remove()
       }, FADE_OUT_DURATION)
-    }, 1)
+    }, 50)
   }
 
   private startEditing = () => {
