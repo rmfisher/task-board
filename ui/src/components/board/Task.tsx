@@ -24,6 +24,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
   public readonly state = { mounted: false, height: 0 }
   private rootElement!: HTMLDivElement
   private textareaElement: HTMLTextAreaElement | null = null
+  private buttonsElement: HTMLDivElement | null = null
 
   public componentDidMount() {
     if (this.props.task.creating) {
@@ -35,13 +36,15 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
     const { task, elementRef } = this.props
     const { mounted, height } = this.state
     const style = task.creating && height !== null ? { height } : undefined
+    this.checkJustDropped()
     return (
       <div
         className={
           'task-container' +
           (task.creating ? ' creating' : '') +
           (mounted ? ' mounted' : '') +
-          (task.editing ? ' editing' : '')
+          (task.editing ? ' editing' : '') +
+          (task.justDropped ? ' just-dropped' : '')
         }
         style={style}
         ref={e => {
@@ -73,7 +76,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
                   </div>
                 ))}
               </div>
-              <div className="buttons">
+              <div className="buttons" ref={this.handleButtons}>
                 <button onClick={this.startEditing}>
                   <EditIcon />
                 </button>
@@ -101,6 +104,16 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
       if (!this.props.task.creating) {
         this.textareaElement.focus()
       }
+    }
+  }
+
+  private handleButtons = (e: HTMLDivElement | null) => {
+    if (this.buttonsElement) {
+      this.buttonsElement.removeEventListener('mousedown', this.stopPropagation)
+    }
+    this.buttonsElement = e
+    if (this.buttonsElement) {
+      this.buttonsElement.addEventListener('mousedown', this.stopPropagation)
     }
   }
 
@@ -155,6 +168,13 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
     const { task, onChange } = this.props
     if (!task.editing) {
       onChange({ ...task, editing: true })
+    }
+  }
+
+  private checkJustDropped = () => {
+    const { task, onChange } = this.props
+    if (task.justDropped) {
+      setTimeout(() => onChange({ ...task, justDropped: false }), 100)
     }
   }
 

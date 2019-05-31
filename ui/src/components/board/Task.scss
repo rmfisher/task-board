@@ -200,7 +200,12 @@
   &:hover:not(.editing) .buttons,
   &.dragged .buttons,
   &.released .buttons,
-  &.dropped .buttons {
+  &.just-dropped .buttons,
+  &.editing .buttons {
     opacity: 1;
+  }
+
+  &.just-dropped .buttons {
+    transition: none;
   }
 }

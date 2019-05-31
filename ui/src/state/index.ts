@@ -21,6 +21,7 @@ export interface Task {
   userLabel?: string
   creating?: boolean
   editing?: boolean
+  justDropped?: boolean
 }
 
 export interface Label {

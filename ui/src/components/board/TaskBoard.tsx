@@ -160,7 +160,7 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
     if (columnIndex !== undefined && taskIndex !== undefined) {
       const { draggedColumnIndex, draggedTaskIndex } = this.state.dragState!
       if (draggedColumnIndex !== columnIndex || draggedTaskIndex !== taskIndex) {
-        this.notifyChange(draggedColumnIndex, draggedTaskIndex, columnIndex, taskIndex)
+        this.notifyChange(draggedColumnIndex, draggedTaskIndex, columnIndex, taskIndex, true)
       }
     }
   }
@@ -170,17 +170,23 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
   }
 
   // Change position from source (i, j) to destination (k, l)
-  private notifyChange(i: number, j: number, k: number, l: number) {
+  private notifyChange(i: number, j: number, k: number, l: number, justDropped?: boolean) {
     const newData = [...this.props.data]
     if (i === k) {
       const tasks = [...newData[i].tasks]
-      tasks.splice(l, 0, tasks.splice(j, 1)[0])
+      const droppedTask = tasks.splice(j, 1)[0]
+      const newTask = justDropped ? { ...droppedTask, justDropped } : droppedTask
+
+      tasks.splice(l, 0, newTask)
 
       newData[i] = { ...newData[i], tasks }
     } else {
       const sourceTasks = [...newData[i].tasks]
       const destinationTasks = [...newData[k].tasks]
-      destinationTasks.splice(l, 0, sourceTasks.splice(j, 1)[0])
+      const droppedTask = sourceTasks.splice(j, 1)[0]
+      const newTask = justDropped ? { ...droppedTask, justDropped } : droppedTask
+
+      destinationTasks.splice(l, 0, newTask)
 
       newData[i] = { ...newData[i], tasks: sourceTasks }
       newData[k] = { ...newData[k], tasks: destinationTasks }
