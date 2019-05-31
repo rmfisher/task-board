@@ -21,7 +21,7 @@ interface TaskDraggableProps {
   remove: (columnIndex: number, taskIndex: number) => void
 }
 
-class TaskDraggable extends React.Component<TaskDraggableProps> {
+class TaskDraggable extends React.PureComponent<TaskDraggableProps> {
   private rootElement!: HTMLDivElement
 
   public componentDidMount() {

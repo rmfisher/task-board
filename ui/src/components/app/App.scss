@@ -13,6 +13,7 @@ body {
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #root {
@@ -43,17 +44,25 @@ button {
   outline: none;
   background-color: white;
   border-radius: 4px;
-  box-shadow: $shadow-2;
   transition: all 100ms;
 
   &:hover:not(:disabled),
   &:focus,
   &:active {
     background-color: $white-hover;
-    box-shadow: $shadow-2-hover;
 
     .icon .fill {
       fill: darken($text-2, 8%);
+    }
+  }
+
+  &.raised {
+    box-shadow: $shadow-2;
+
+    &:hover:not(:disabled),
+    &:focus,
+    &:active {
+      box-shadow: $shadow-2-hover;
     }
   }
 }

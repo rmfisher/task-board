@@ -1,5 +1,8 @@
 import React from 'react'
 import { Task } from '../../state'
+import EditIcon from '../../assets/icons/EditIcon'
+import AssignmentIndIcon from '../../assets/icons/AssignmentIndIcon'
+import LocalOfferIcon from '../../assets/icons/LocalOfferIcon'
 import './Task.scss'
 
 const FADE_IN_DURATION = 260
@@ -45,7 +48,6 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
           this.rootElement = e as HTMLDivElement
           elementRef(e)
         }}
-        onDoubleClick={this.handleDoubleClick}
       >
         <div className="task">
           <div className="task-content">
@@ -62,13 +64,26 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
                 />
               )}
             </div>
-            {task.userLabel && <div className={'avatar ' + task.userLabel} />}
-            <div className="labels">
-              {task.labels.map(l => (
-                <div key={l.name} className={'label ' + l.color}>
-                  {l.name}
-                </div>
-              ))}
+            <div className="avatar-container">{task.userLabel && <div className={'avatar ' + task.userLabel} />}</div>
+            <div className="label-container">
+              <div className="labels">
+                {task.labels.map(l => (
+                  <div key={l.name} className={'label ' + l.color}>
+                    {l.name}
+                  </div>
+                ))}
+              </div>
+              <div className="buttons">
+                <button onClick={this.startEditing}>
+                  <EditIcon />
+                </button>
+                <button>
+                  <AssignmentIndIcon />
+                </button>
+                <button>
+                  <LocalOfferIcon />
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -103,13 +118,6 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
     }
   }
 
-  private handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { task, onChange } = this.props
-    if (!task.editing) {
-      onChange({ ...task, editing: true })
-    }
-  }
-
   private handleBlur = () => {
     const { task, onChange } = this.props
     if (task.creating) {
@@ -141,6 +149,13 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
         this.props.remove()
       }, FADE_OUT_DURATION)
     }, 1)
+  }
+
+  private startEditing = () => {
+    const { task, onChange } = this.props
+    if (!task.editing) {
+      onChange({ ...task, editing: true })
+    }
   }
 
   private stopPropagation = (e: MouseEvent) => e.stopPropagation()

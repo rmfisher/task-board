@@ -1,7 +1,7 @@
 import React from 'react'
 import { v1 as uuid } from 'uuid'
 import { Column, Task } from '../../state'
-import AddIcon from '../../assets/icons/Add'
+import AddIcon from '../../assets/icons/AddIcon'
 import TaskDraggable from './TaskDraggable'
 import TaskDragHelper from './TaskDragHelper'
 import Placeholder from './Placeholder'
@@ -49,7 +49,7 @@ class TaskBoard extends React.Component<TaskBoardProps, TaskBoardState> {
           return (
             <div key={c.id} className="column">
               <h2>{c.label}</h2>
-              <button className="add-button" onClick={() => this.addTask(i)} disabled={columnCreating}>
+              <button className="add-button raised" onClick={() => this.addTask(i)} disabled={columnCreating}>
                 <AddIcon />
               </button>
               <div className="task-list">
