@@ -12,6 +12,7 @@ const FADE_OUT_DURATION = FADE_IN_DURATION + 120
 interface TaskProps {
   task: Task
   elementRef: any
+  contentRef: any
   onChange: (task: Task) => void
   remove: () => void
 }
@@ -35,7 +36,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
   }
 
   public render() {
-    const { task, elementRef } = this.props
+    const { task, elementRef, contentRef } = this.props
     const { visible, removing, height } = this.state
     const style = (task.creating || removing) && height !== null ? { height } : undefined
     this.checkJustDropped()
@@ -56,7 +57,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
         }}
       >
         <div className="task">
-          <div className="task-content">
+          <div className="task-content" ref={contentRef}>
             <div className="text-container">
               <div className="description">{task.description}</div>
               {task.editing && (

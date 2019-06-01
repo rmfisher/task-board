@@ -23,10 +23,11 @@ interface TaskDraggableProps {
 
 class TaskDraggable extends React.PureComponent<TaskDraggableProps> {
   private rootElement!: HTMLDivElement
+  private contentElement!: HTMLDivElement
 
   public componentDidMount() {
-    this.rootElement.addEventListener('mousedown', this.handleMouseDown)
-    this.rootElement.addEventListener('touchstart', this.handleTouchStart)
+    this.contentElement.addEventListener('mousedown', this.handleMouseDown)
+    this.contentElement.addEventListener('touchstart', this.handleTouchStart)
     document.addEventListener('mousemove', this.handleMouseMove)
     document.addEventListener('touchmove', this.handleTouchMove)
     window.addEventListener('mouseup', this.handleMouseUp)
@@ -35,8 +36,8 @@ class TaskDraggable extends React.PureComponent<TaskDraggableProps> {
   }
 
   public componentWillUnmount() {
-    this.rootElement.removeEventListener('mousedown', this.handleMouseDown)
-    this.rootElement.removeEventListener('touchstart', this.handleTouchStart)
+    this.contentElement.removeEventListener('mousedown', this.handleMouseDown)
+    this.contentElement.removeEventListener('touchstart', this.handleTouchStart)
     document.removeEventListener('mousemove', this.handleMouseMove)
     document.removeEventListener('touchmove', this.handleTouchMove)
     window.removeEventListener('mouseup', this.handleMouseUp)
@@ -49,6 +50,7 @@ class TaskDraggable extends React.PureComponent<TaskDraggableProps> {
       <TaskComponent
         task={this.props.task}
         elementRef={this.handleRef}
+        contentRef={this.handleContentRef}
         onChange={this.handleChange}
         remove={this.handleRemove}
       />
@@ -108,6 +110,8 @@ class TaskDraggable extends React.PureComponent<TaskDraggableProps> {
   }
 
   private handleRef = (e: HTMLDivElement | null) => (this.rootElement = e as HTMLDivElement)
+
+  private handleContentRef = (e: HTMLDivElement | null) => (this.contentElement = e as HTMLDivElement)
 
   private handleChange = (task: Task) => {
     this.props.onChange(this.props.columnIndex, this.props.taskIndex, task)

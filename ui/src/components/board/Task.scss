@@ -204,7 +204,7 @@
     visibility: hidden;
   }
 
-  &:hover:not(.editing) .buttons,
+  &:not(.editing) .task-content:hover .buttons,
   &.dragged .buttons,
   &.released .buttons,
   &.just-dropped .buttons {
