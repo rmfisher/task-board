@@ -110,8 +110,9 @@
     right: 0;
     display: flex;
     background-color: white;
-    margin: -14px;
-    padding: 5px;
+    margin: -18px;
+    padding: 4px;
+    border-radius: 4px;
     pointer-events: none;
     opacity: 0;
     transition: opacity 160ms;
@@ -126,7 +127,12 @@
       }
 
       &:not(:first-child) {
-        margin-left: 8px;
+        margin-left: 6px;
+      }
+
+      .icon {
+        width: 20px;
+        height: 20px;
       }
     }
   }

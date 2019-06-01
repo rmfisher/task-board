@@ -3,6 +3,7 @@ import { Task } from '../../state'
 import EditIcon from '../../assets/icons/EditIcon'
 import AssignmentIndIcon from '../../assets/icons/AssignmentIndIcon'
 import LocalOfferIcon from '../../assets/icons/LocalOfferIcon'
+import CloseIcon from '../../assets/icons/CloseIcon'
 import './Task.scss'
 
 const FADE_IN_DURATION = 260
@@ -86,6 +87,9 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
                 <button>
                   <LocalOfferIcon />
                 </button>
+                <button onClick={this.fadeOut}>
+                  <CloseIcon />
+                </button>
               </div>
             </div>
           </div>
@@ -144,7 +148,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
     }
   }
 
-  private fadeIn() {
+  private fadeIn = () => {
     setTimeout(() => this.setState({ mounted: true, height: this.rootElement.scrollHeight }), 1)
     setTimeout(() => {
       if (this.textareaElement) {
@@ -154,7 +158,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
     }, FADE_IN_DURATION)
   }
 
-  private fadeOut() {
+  private fadeOut = () => {
     this.setState({ height: this.rootElement.scrollHeight })
     setTimeout(() => {
       this.setState({ mounted: false, height: 0 })
