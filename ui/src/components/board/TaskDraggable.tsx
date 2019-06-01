@@ -101,6 +101,10 @@ class TaskDraggable extends React.PureComponent<TaskDraggableProps> {
 
   private handleMouseUp = () => {
     this.props.onMouseUp()
+    const activeElement = document.activeElement as any
+    if (activeElement) {
+      activeElement.blur()
+    }
   }
 
   private handleRef = (e: HTMLDivElement | null) => (this.rootElement = e as HTMLDivElement)

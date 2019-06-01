@@ -112,6 +112,7 @@
     background-color: white;
     margin: -14px;
     padding: 5px;
+    pointer-events: none;
     opacity: 0;
     transition: opacity 160ms;
 
@@ -200,9 +201,9 @@
   &:hover:not(.editing) .buttons,
   &.dragged .buttons,
   &.released .buttons,
-  &.just-dropped .buttons,
-  &.editing .buttons {
+  &.just-dropped .buttons {
     opacity: 1;
+    pointer-events: all;
   }
 
   &.just-dropped .buttons {

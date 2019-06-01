@@ -77,7 +77,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
                 ))}
               </div>
               <div className="buttons" ref={this.handleButtons}>
-                <button onClick={this.startEditing}>
+                <button onClick={this.startEditing} className="edit-button">
                   <EditIcon />
                 </button>
                 <button>
