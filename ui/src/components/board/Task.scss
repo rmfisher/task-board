@@ -106,11 +106,10 @@
 
   .buttons {
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: -18px;
+    right: -18px;
     display: flex;
     background-color: white;
-    margin: -18px;
     padding: 4px;
     border-radius: 4px;
     pointer-events: none;
