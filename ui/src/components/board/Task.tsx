@@ -17,12 +17,13 @@ interface TaskProps {
 }
 
 interface TaskState {
-  mounted: boolean
+  visible: boolean
+  removing: boolean
   height: number | null
 }
 
 class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
-  public readonly state = { mounted: false, height: 0 }
+  public readonly state = { visible: false, removing: false, height: 0 }
   private rootElement!: HTMLDivElement
   private textareaElement: HTMLTextAreaElement | null = null
   private buttonsElement: HTMLDivElement | null = null
@@ -35,15 +36,16 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
 
   public render() {
     const { task, elementRef } = this.props
-    const { mounted, height } = this.state
-    const style = task.creating && height !== null ? { height } : undefined
+    const { visible, removing, height } = this.state
+    const style = (task.creating || removing) && height !== null ? { height } : undefined
     this.checkJustDropped()
     return (
       <div
         className={
           'task-container' +
+          (removing ? ' removing' : '') +
+          (visible ? ' visible' : '') +
           (task.creating ? ' creating' : '') +
-          (mounted ? ' mounted' : '') +
           (task.editing ? ' editing' : '') +
           (task.justDropped ? ' just-dropped' : '')
         }
@@ -149,7 +151,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
   }
 
   private fadeIn = () => {
-    setTimeout(() => this.setState({ mounted: true, height: this.rootElement.scrollHeight }), 1)
+    setTimeout(() => this.setState({ visible: true, height: this.rootElement.scrollHeight }), 1)
     setTimeout(() => {
       if (this.textareaElement) {
         this.textareaElement.focus()
@@ -159,9 +161,9 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
   }
 
   private fadeOut = () => {
-    this.setState({ height: this.rootElement.scrollHeight })
+    this.setState({ height: this.rootElement.scrollHeight, removing: true })
     setTimeout(() => {
-      this.setState({ mounted: false, height: 0 })
+      this.setState({ visible: false, height: 0 })
       setTimeout(() => {
         this.props.remove()
       }, FADE_OUT_DURATION)

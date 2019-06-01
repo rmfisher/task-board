@@ -148,10 +148,6 @@
   flex-direction: column;
   min-height: 0;
 
-  &.dragged .task-content {
-    transform: rotate(2deg);
-  }
-
   &.dragged,
   &.released {
     position: absolute;
@@ -166,6 +162,10 @@
     }
   }
 
+  &.dragged .task-content {
+    transform: rotate(2deg);
+  }
+
   &.released {
     transition: all 180ms $bezier-1;
     transition-property: left, top;
@@ -175,7 +175,8 @@
     }
   }
 
-  &.creating {
+  &.creating,
+  &.removing {
     overflow: hidden;
     $duration: 260ms;
     $delay: 120ms;
@@ -190,7 +191,7 @@
       transition: height $duration $bezier-1 $delay, padding $duration $bezier-1 $delay, opacity $duration $bezier-1;
     }
 
-    &.mounted {
+    &.visible {
       opacity: 1;
 
       &:not(:last-child) {
