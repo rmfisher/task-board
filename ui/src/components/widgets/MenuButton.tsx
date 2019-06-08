@@ -48,14 +48,14 @@ class MenuButton extends React.Component<MenuButtonProps, MenuButtonState> {
           <div className="menu-anchor">
             <div className="menu-content">
               {items.map(item => (
-                <div
+                <button
                   key={item.text}
                   className="menu-item"
                   role="button"
                   onClick={() => this.handleItemClick(item.onClick)}
                 >
                   {item.text}
-                </div>
+                </button>
               ))}
             </div>
           </div>

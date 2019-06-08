@@ -23,7 +23,9 @@
     .menu-item {
       display: flex;
       align-items: center;
+      justify-content: flex-start;
       padding: 8px 25px 8px 20px;
+      border-radius: 0;
 
       &:hover,
       &:active,
