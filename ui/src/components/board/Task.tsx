@@ -142,7 +142,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
   }
 
   private fadeOut = () => {
-    this.setState({ height: this.rootElement.scrollHeight, removing: true })
+    this.setState({ height: this.rootElement.clientHeight, removing: true })
     setTimeout(() => {
       this.setState({ visible: false, height: 0 })
       setTimeout(() => {
