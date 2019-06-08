@@ -124,7 +124,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
   }
 
   private handleDocumentKeyDown = (e: KeyboardEvent) => {
-    if ((e.key === 'Escape' || e.keyCode === 27) && this.props.task.editing && this.state.height === null) {
+    if ((e.key === 'Escape' || e.keyCode === 27) && this.props.task.editing && !this.state.height) {
       this.cancelEdit()
     }
   }

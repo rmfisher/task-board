@@ -24,11 +24,13 @@ class MenuButton extends React.Component<MenuButtonProps, MenuButtonState> {
   public componentDidMount() {
     this.containerElement.addEventListener('mousedown', this.handleContainerMouseDown)
     document.addEventListener('mousedown', this.handleDocumentMouseDown, true)
+    document.addEventListener('keydown', this.handleDocumentKeyDown, true)
   }
 
   public componentWillUnmount() {
     this.containerElement.removeEventListener('mousedown', this.handleContainerMouseDown)
     document.removeEventListener('mousedown', this.handleDocumentMouseDown, true)
+    document.removeEventListener('keydown', this.handleDocumentKeyDown, true)
   }
 
   public render() {
@@ -75,7 +77,13 @@ class MenuButton extends React.Component<MenuButtonProps, MenuButtonState> {
   }
 
   private handleDocumentMouseDown = (e: MouseEvent) => {
-    if (e.target instanceof Node && !this.containerElement.contains(e.target)) {
+    if (this.state.open && e.target instanceof Node && !this.containerElement.contains(e.target)) {
+      this.setState({ open: false })
+    }
+  }
+
+  private handleDocumentKeyDown = (e: KeyboardEvent) => {
+    if (this.state.open && (e.key === 'Escape' || e.keyCode === 27)) {
       this.setState({ open: false })
     }
   }
