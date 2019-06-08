@@ -1,9 +1,6 @@
 import React from 'react'
+import MoreVertIcon from '../../assets/icons/MoreVertIcon'
 import { Task } from '../../state'
-import EditIcon from '../../assets/icons/EditIcon'
-import AssignmentIndIcon from '../../assets/icons/AssignmentIndIcon'
-import LocalOfferIcon from '../../assets/icons/LocalOfferIcon'
-import CloseIcon from '../../assets/icons/CloseIcon'
 import './Task.scss'
 
 const FADE_IN_DURATION = 260
@@ -58,42 +55,31 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
       >
         <div className="task">
           <div className="task-content" ref={contentRef}>
-            <div className="text-container">
-              <div className="description">{task.description}</div>
-              {task.editing && (
-                <textarea
-                  spellCheck={false}
-                  value={task.description}
-                  onChange={this.handleTextChange}
-                  onKeyPress={this.handleKeyPress}
-                  ref={this.handleTextarea}
-                  onBlur={this.handleBlur}
-                />
-              )}
+            <div className="top-container">
+              <div className="text-container">
+                <div className="description">{task.description}</div>
+                {task.editing && (
+                  <textarea
+                    spellCheck={false}
+                    value={task.description}
+                    onChange={this.handleTextChange}
+                    onKeyPress={this.handleKeyPress}
+                    ref={this.handleTextarea}
+                    onBlur={this.handleBlur}
+                  />
+                )}
+              </div>
+              <button>
+                <MoreVertIcon />
+              </button>
             </div>
             <div className="avatar-container">{task.userLabel && <div className={'avatar ' + task.userLabel} />}</div>
-            <div className="label-container">
-              <div className="labels">
-                {task.labels.map(l => (
-                  <div key={l.name} className={'label ' + l.color}>
-                    {l.name}
-                  </div>
-                ))}
-              </div>
-              <div className="buttons" ref={this.handleButtons}>
-                <button onClick={this.startEditing} className="edit-button">
-                  <EditIcon />
-                </button>
-                <button>
-                  <AssignmentIndIcon />
-                </button>
-                <button>
-                  <LocalOfferIcon />
-                </button>
-                <button onClick={this.fadeOut}>
-                  <CloseIcon />
-                </button>
-              </div>
+            <div className="labels">
+              {task.labels.map(l => (
+                <div key={l.name} className={'label ' + l.color}>
+                  {l.name}
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -104,23 +90,15 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
   private handleTextarea = (e: HTMLTextAreaElement | null) => {
     if (this.textareaElement) {
       this.textareaElement.removeEventListener('mousedown', this.stopPropagation)
+      this.textareaElement.removeEventListener('mouseup', this.stopPropagation)
     }
     this.textareaElement = e
     if (this.textareaElement) {
       this.textareaElement.addEventListener('mousedown', this.stopPropagation)
+      this.textareaElement.addEventListener('mouseup', this.stopPropagation)
       if (!this.props.task.creating) {
         this.textareaElement.focus()
       }
-    }
-  }
-
-  private handleButtons = (e: HTMLDivElement | null) => {
-    if (this.buttonsElement) {
-      this.buttonsElement.removeEventListener('mousedown', this.stopPropagation)
-    }
-    this.buttonsElement = e
-    if (this.buttonsElement) {
-      this.buttonsElement.addEventListener('mousedown', this.stopPropagation)
     }
   }
 

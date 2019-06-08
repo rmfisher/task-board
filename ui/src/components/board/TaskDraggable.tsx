@@ -28,6 +28,7 @@ class TaskDraggable extends React.PureComponent<TaskDraggableProps> {
   public componentDidMount() {
     this.contentElement.addEventListener('mousedown', this.handleMouseDown)
     this.contentElement.addEventListener('touchstart', this.handleTouchStart)
+    this.contentElement.addEventListener('mouseup', this.handleTaskMouseUp)
     document.addEventListener('mousemove', this.handleMouseMove)
     document.addEventListener('touchmove', this.handleTouchMove)
     window.addEventListener('mouseup', this.handleMouseUp)
@@ -38,6 +39,7 @@ class TaskDraggable extends React.PureComponent<TaskDraggableProps> {
   public componentWillUnmount() {
     this.contentElement.removeEventListener('mousedown', this.handleMouseDown)
     this.contentElement.removeEventListener('touchstart', this.handleTouchStart)
+    this.contentElement.removeEventListener('mouseup', this.handleTaskMouseUp)
     document.removeEventListener('mousemove', this.handleMouseMove)
     document.removeEventListener('touchmove', this.handleTouchMove)
     window.removeEventListener('mouseup', this.handleMouseUp)
@@ -62,14 +64,16 @@ class TaskDraggable extends React.PureComponent<TaskDraggableProps> {
       if (e.cancelable) {
         e.preventDefault()
       }
-      this.props.onMouseDown(
-        e.clientX,
-        e.clientY,
-        this.rootElement,
-        this.props.task.id,
-        this.props.taskIndex,
-        this.props.columnIndex
-      )
+      if (!this.props.task.editing) {
+        this.props.onMouseDown(
+          e.clientX,
+          e.clientY,
+          this.rootElement,
+          this.props.task.id,
+          this.props.taskIndex,
+          this.props.columnIndex
+        )
+      }
     } else {
       this.handleMouseUp()
     }
@@ -101,13 +105,7 @@ class TaskDraggable extends React.PureComponent<TaskDraggableProps> {
     }
   }
 
-  private handleMouseUp = () => {
-    this.props.onMouseUp()
-    const activeElement = document.activeElement as any
-    if (activeElement) {
-      activeElement.blur()
-    }
-  }
+  private handleMouseUp = () => this.props.onMouseUp()
 
   private handleRef = (e: HTMLDivElement | null) => (this.rootElement = e as HTMLDivElement)
 
@@ -119,6 +117,15 @@ class TaskDraggable extends React.PureComponent<TaskDraggableProps> {
 
   private handleRemove = () => {
     this.props.remove(this.props.columnIndex, this.props.taskIndex)
+  }
+
+  private handleTaskMouseUp = () => {
+    if (!this.props.task.editing) {
+      const activeElement = document.activeElement as any
+      if (activeElement) {
+        activeElement.blur()
+      }
+    }
   }
 }
 

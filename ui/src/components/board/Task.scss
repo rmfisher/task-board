@@ -18,6 +18,18 @@
     transition: box-shadow 180ms, transform 180ms;
   }
 
+  .top-container {
+    display: flex;
+    align-items: flex-start;
+
+    > button {
+      margin: -15px -15px 4px 4px;
+      padding: 6px 2px;
+      opacity: 0;
+      transition: opacity 160ms;
+    }
+  }
+
   .text-container {
     position: relative;
     display: flex;
@@ -54,7 +66,7 @@
   .labels {
     display: flex;
     flex-wrap: wrap;
-    margin: -6px;
+    margin: 10px -6px -6px -6px;
     transition: opacity 400ms $bezier-1;
 
     .label {
@@ -99,12 +111,6 @@
 
   .avatar-container {
     min-height: 12px;
-  }
-
-  .label-container {
-    position: relative;
-    display: flex;
-    margin-top: 16px;
   }
 
   .buttons {
@@ -160,13 +166,9 @@
       box-shadow: $shadow-3;
     }
 
-    .buttons {
+    .top-container > button {
       pointer-events: none;
     }
-  }
-
-  &.dragged .task-content {
-    transform: rotate(2deg);
   }
 
   &.released {
@@ -207,15 +209,16 @@
     visibility: hidden;
   }
 
-  &:not(.editing) .task-content:hover .buttons,
-  &.dragged .buttons,
-  &.released .buttons,
-  &.just-dropped .buttons {
+  &:not(.editing) .task-content:hover .top-container > button,
+  &.dragged .top-container > button,
+  &.released .top-container > button,
+  &.just-dropped .top-container > button {
     opacity: 1;
     pointer-events: all;
+    transition: opacity 300ms;
   }
 
-  &.just-dropped .buttons {
+  &.just-dropped .top-container > button {
     transition: none;
   }
 }
