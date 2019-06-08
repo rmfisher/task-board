@@ -183,7 +183,8 @@
   &.dragged .top-container .task-menu-button,
   &.released .top-container .task-menu-button,
   &.just-dropped .top-container .task-menu-button,
-  .top-container .task-menu-button.open {
+  .top-container .task-menu-button.open,
+  .top-container .task-menu-button:focus-within {
     opacity: 1;
     pointer-events: all;
     transition: opacity 300ms;
