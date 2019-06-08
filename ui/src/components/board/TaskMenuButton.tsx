@@ -16,7 +16,7 @@ const TaskMenuButton: React.FunctionComponent<TaskMenuButtonProps> = ({ startEdi
     items={[
       { text: 'Edit', onClick: startEditing },
       { text: 'Assign', onClick: () => {} },
-      { text: 'Labels', onClick: () => {} },
+      { text: 'Tags', onClick: () => {} },
       { text: 'Delete', onClick: remove },
     ]}
     disabled={disabled}
