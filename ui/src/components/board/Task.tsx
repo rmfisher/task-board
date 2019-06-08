@@ -69,7 +69,11 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
                   />
                 )}
               </div>
-              <TaskMenuButton startEditing={this.startEditing} remove={this.fadeOut} disabled={dragged} />
+              <TaskMenuButton
+                startEditing={this.startEditing}
+                remove={this.fadeOut}
+                disabled={dragged || !!task.editing}
+              />
             </div>
             <div className="avatar-container">{task.userLabel && <div className={'avatar ' + task.userLabel} />}</div>
             <div className="labels">

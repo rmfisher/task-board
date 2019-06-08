@@ -1,16 +1,15 @@
 import React from 'react'
 import './MenuButton.scss'
 
-interface MenuItem {
-  icon: React.ReactNode
+interface MenuItemProps {
   text: string
   onClick: () => void
 }
 
 interface MenuButtonProps {
   className: string
-  buttonIcon: React.ReactNode
-  items: Array<MenuItem>
+  buttonContent: React.ReactNode
+  items: Array<MenuItemProps>
   disabled: boolean
 }
 
@@ -33,7 +32,7 @@ class MenuButton extends React.Component<MenuButtonProps, MenuButtonState> {
   }
 
   public render() {
-    const { className, buttonIcon, items } = this.props
+    const { className, buttonContent, items } = this.props
     const { open } = this.state
     return (
       <div
@@ -41,16 +40,22 @@ class MenuButton extends React.Component<MenuButtonProps, MenuButtonState> {
         ref={e => (this.containerElement = e as HTMLDivElement)}
       >
         <button className="menu-button" onClick={this.handleButtonClick}>
-          {buttonIcon}
+          {buttonContent}
         </button>
         {open && items.length > 0 && (
-          <div className="menu-content">
-            {items.map(item => (
-              <div key={item.text} className="menu-item" role="button" onClick={item.onClick}>
-                {item.icon}
-                {item.text}
-              </div>
-            ))}
+          <div className="menu-anchor">
+            <div className="menu-content">
+              {items.map(item => (
+                <div
+                  key={item.text}
+                  className="menu-item"
+                  role="button"
+                  onClick={() => this.handleItemClick(item.onClick)}
+                >
+                  {item.text}
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -73,6 +78,11 @@ class MenuButton extends React.Component<MenuButtonProps, MenuButtonState> {
     if (e.target instanceof Node && !this.containerElement.contains(e.target)) {
       this.setState({ open: false })
     }
+  }
+
+  private handleItemClick = (itemOnClick: () => void) => {
+    this.setState({ open: false })
+    itemOnClick()
   }
 }
 
