@@ -30,6 +30,11 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
     if (this.props.task.creating) {
       this.fadeIn()
     }
+    document.addEventListener('keydown', this.handleDocumentKeyDown, true)
+  }
+
+  public componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleDocumentKeyDown, true)
   }
 
   public render() {
@@ -65,7 +70,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
                     onChange={this.handleTextChange}
                     onKeyPress={this.handleKeyPress}
                     ref={this.handleTextarea}
-                    onBlur={this.handleBlur}
+                    onBlur={this.cancelEdit}
                   />
                 )}
               </div>
@@ -118,15 +123,22 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
     }
   }
 
-  private handleBlur = () => {
+  private handleDocumentKeyDown = (e: KeyboardEvent) => {
+    if ((e.key === 'Escape' || e.keyCode === 27) && this.props.task.editing && this.state.height === null) {
+      this.cancelEdit()
+    }
+  }
+
+  private cancelEdit = () => {
     const { task, onChange } = this.props
-    if (task.creating) {
+    const { removing } = this.state
+    if (task.creating && !removing) {
       if (!task.description && !task.userLabel && task.labels.length === 0) {
         this.fadeOut()
       } else if (task.editing) {
         onChange({ ...task, editing: false, creating: false })
       }
-    } else if (task.editing) {
+    } else if (task.editing && !removing) {
       onChange({ ...task, editing: false })
     }
   }
