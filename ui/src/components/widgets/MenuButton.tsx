@@ -83,8 +83,13 @@ class MenuButton extends React.Component<MenuButtonProps, MenuButtonState> {
   }
 
   private handleDocumentKeyDown = (e: KeyboardEvent) => {
-    if (this.state.open && (e.key === 'Escape' || e.keyCode === 27)) {
-      this.setState({ open: false })
+    if (this.state.open) {
+      const escape = e.key === 'Escape' || e.keyCode === 27
+      const enter = e.key === 'Enter' || e.keyCode === 13
+      const focusInside = this.containerElement && this.containerElement.contains(document.activeElement)
+      if (escape || (enter && !focusInside)) {
+        this.setState({ open: false })
+      }
     }
   }
 
