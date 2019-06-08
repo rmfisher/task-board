@@ -15,7 +15,7 @@
     position: absolute;
     display: flex;
     flex-direction: column;
-    background-color: $white-hover-2;
+    background-color: white;
     padding: 6px 0;
     border-radius: 4px;
     box-shadow: $shadow-3;
@@ -28,7 +28,7 @@
       &:hover,
       &:active,
       &:focus {
-        background-color: $bg-2;
+        background-color: $white-hover-2;
       }
     }
   }
