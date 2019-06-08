@@ -1,5 +1,5 @@
 import React from 'react'
-import MoreVertIcon from '../../assets/icons/MoreVertIcon'
+import TaskMenuButton from './TaskMenuButton'
 import { Task } from '../../state'
 import './Task.scss'
 
@@ -10,6 +10,7 @@ interface TaskProps {
   task: Task
   elementRef: any
   contentRef: any
+  dragged: boolean
   onChange: (task: Task) => void
   remove: () => void
 }
@@ -24,7 +25,6 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
   public readonly state = { visible: false, removing: false, height: 0 }
   private rootElement!: HTMLDivElement
   private textareaElement: HTMLTextAreaElement | null = null
-  private buttonsElement: HTMLDivElement | null = null
 
   public componentDidMount() {
     if (this.props.task.creating) {
@@ -33,7 +33,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
   }
 
   public render() {
-    const { task, elementRef, contentRef } = this.props
+    const { task, elementRef, contentRef, dragged } = this.props
     const { visible, removing, height } = this.state
     const style = (task.creating || removing) && height !== null ? { height } : undefined
     this.checkJustDropped()
@@ -69,9 +69,7 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
                   />
                 )}
               </div>
-              <button>
-                <MoreVertIcon />
-              </button>
+              <TaskMenuButton startEditing={this.startEditing} remove={this.fadeOut} disabled={dragged} />
             </div>
             <div className="avatar-container">{task.userLabel && <div className={'avatar ' + task.userLabel} />}</div>
             <div className="labels">

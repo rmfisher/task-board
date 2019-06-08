@@ -53,6 +53,7 @@ class TaskDraggable extends React.PureComponent<TaskDraggableProps> {
         task={this.props.task}
         elementRef={this.handleRef}
         contentRef={this.handleContentRef}
+        dragged={!!this.props.dragged}
         onChange={this.handleChange}
         remove={this.handleRemove}
       />

@@ -13,7 +13,6 @@
     background-color: white;
     border-radius: 4px;
     box-shadow: $shadow-1;
-    overflow: hidden;
     box-sizing: border-box;
     transition: box-shadow 180ms, transform 180ms;
   }
@@ -22,9 +21,8 @@
     display: flex;
     align-items: flex-start;
 
-    > button {
+    .task-menu-button {
       margin: -15px -15px 4px 4px;
-      padding: 6px 2px;
       opacity: 0;
       transition: opacity 160ms;
     }
@@ -113,38 +111,6 @@
     min-height: 12px;
   }
 
-  .buttons {
-    position: absolute;
-    bottom: -18px;
-    right: -18px;
-    display: flex;
-    background-color: white;
-    padding: 4px;
-    border-radius: 4px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 160ms;
-
-    button {
-      background-color: $bg-2;
-
-      &:hover,
-      &:active,
-      &:focus {
-        background-color: $bg-3;
-      }
-
-      &:not(:first-child) {
-        margin-left: 6px;
-      }
-
-      .icon {
-        width: 20px;
-        height: 20px;
-      }
-    }
-  }
-
   @include desktop-small {
     .labels .label {
       min-width: 50px;
@@ -166,7 +132,7 @@
       box-shadow: $shadow-3;
     }
 
-    .top-container > button {
+    .top-container .task-menu-button {
       pointer-events: none;
     }
   }
@@ -209,16 +175,17 @@
     visibility: hidden;
   }
 
-  &:not(.editing) .task-content:hover .top-container > button,
-  &.dragged .top-container > button,
-  &.released .top-container > button,
-  &.just-dropped .top-container > button {
+  &:not(.editing) .task-content:hover .top-container .task-menu-button,
+  &.dragged .top-container .task-menu-button,
+  &.released .top-container .task-menu-button,
+  &.just-dropped .top-container .task-menu-button,
+  .top-container .task-menu-button.open {
     opacity: 1;
     pointer-events: all;
     transition: opacity 300ms;
   }
 
-  &.just-dropped .top-container > button {
+  &.just-dropped .top-container .task-menu-button {
     transition: none;
   }
 }
