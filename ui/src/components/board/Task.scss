@@ -5,7 +5,6 @@
   padding: 8px 0;
 
   .task-content {
-    cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -71,6 +70,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      user-select: none;
       margin: 6px;
       padding: 5px 10px;
       background-color: $text-2;
@@ -173,6 +173,10 @@
 
   &.editing .description {
     visibility: hidden;
+  }
+
+  &:not(.editing) .task-content {
+    cursor: pointer;
   }
 
   &:not(.editing) .task-content:hover .top-container .task-menu-button,
