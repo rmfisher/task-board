@@ -1,14 +1,14 @@
 {
-  "main.css": "/task-board/static/css/main.2fc26ea0.chunk.css",
-  "main.js": "/task-board/static/js/main.be47e1a0.chunk.js",
-  "main.js.map": "/task-board/static/js/main.be47e1a0.chunk.js.map",
+  "main.css": "/task-board/static/css/main.0222e28f.chunk.css",
+  "main.js": "/task-board/static/js/main.c833a84b.chunk.js",
+  "main.js.map": "/task-board/static/js/main.c833a84b.chunk.js.map",
   "runtime~main.js": "/task-board/static/js/runtime~main.88a8fd7c.js",
   "runtime~main.js.map": "/task-board/static/js/runtime~main.88a8fd7c.js.map",
   "static/js/2.161414c7.chunk.js": "/task-board/static/js/2.161414c7.chunk.js",
   "static/js/2.161414c7.chunk.js.map": "/task-board/static/js/2.161414c7.chunk.js.map",
   "index.html": "/task-board/index.html",
-  "precache-manifest.d850155e1910b9836ae29a6d6a965289.js": "/task-board/precache-manifest.d850155e1910b9836ae29a6d6a965289.js",
+  "precache-manifest.11cecc635f74d1854722d59d8b62044e.js": "/task-board/precache-manifest.11cecc635f74d1854722d59d8b62044e.js",
   "service-worker.js": "/task-board/service-worker.js",
-  "static/css/main.2fc26ea0.chunk.css.map": "/task-board/static/css/main.2fc26ea0.chunk.css.map",
+  "static/css/main.0222e28f.chunk.css.map": "/task-board/static/css/main.0222e28f.chunk.css.map",
   "static/media/App.scss": "/task-board/static/media/sorcerio.5061132b.png"
 }
