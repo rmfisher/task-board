@@ -1,4 +1,8 @@
 .task-menu-button {
+  &.open {
+    z-index: 10;
+  }
+
   .menu-button {
     padding: 6px 2px;
   }
