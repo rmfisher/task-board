@@ -174,7 +174,8 @@
     }
   }
 
-  &.editing .description {
+  &.editing .description,
+  &.editing .top-container .task-menu-button {
     visibility: hidden;
   }
 
