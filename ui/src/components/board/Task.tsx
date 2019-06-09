@@ -80,14 +80,16 @@ class TaskComponent extends React.PureComponent<TaskProps, TaskState> {
                 disabled={dragged || !!task.editing}
               />
             </div>
-            <div className="avatar-container">{task.userLabel && <div className={'avatar ' + task.userLabel} />}</div>
-            <div className="labels">
-              {task.labels.map(l => (
-                <div key={l.name} className={'label ' + l.color}>
-                  {l.name}
-                </div>
-              ))}
-            </div>
+            {task.userLabel && <div className={'avatar ' + task.userLabel} />}
+            {task.labels && task.labels.length > 0 && (
+              <div className="labels">
+                {task.labels.map(l => (
+                  <div key={l.name} className={'label ' + l.color}>
+                    {l.name}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

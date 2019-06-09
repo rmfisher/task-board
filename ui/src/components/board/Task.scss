@@ -36,7 +36,6 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin-bottom: 10px;
 
     .description {
       color: $text-1;
@@ -62,6 +61,10 @@
       line-height: 1.25;
       width: 100%;
     }
+  }
+
+  .avatar {
+    margin-top: 10px;
   }
 
   .labels {
@@ -109,10 +112,6 @@
         background-color: $red;
       }
     }
-  }
-
-  .avatar-container {
-    min-height: 12px;
   }
 
   @include desktop-small {
