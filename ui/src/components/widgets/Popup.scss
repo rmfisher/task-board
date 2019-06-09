@@ -19,4 +19,26 @@
     border-radius: 4px;
     box-shadow: $shadow-3;
   }
+
+  &.left {
+    .popup-positioner {
+      right: unset;
+      left: 0;
+    }
+
+    .popup-content {
+      right: 0;
+    }
+  }
+
+  &.above {
+    .popup-positioner {
+      top: unset;
+      bottom: 0;
+    }
+
+    .popup-content {
+      bottom: 0;
+    }
+  }
 }

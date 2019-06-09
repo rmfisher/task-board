@@ -1,6 +1,9 @@
 import React from 'react'
 import './Popup.scss'
 
+const RIGHT_THRESHOLD = 110
+const BOTTOM_THRESHOLD = 150
+
 interface PopupProps {
   className: string
   open: boolean
@@ -24,9 +27,15 @@ class Popup extends React.Component<PopupProps> {
 
   public render() {
     const { className, anchor, open, children } = this.props
+    const orientation = open ? this.checkOrientation() : null
     return (
       <div
-        className={'popup-container' + (className ? ' ' + className : '') + (open ? ' open' : '')}
+        className={
+          'popup-container' +
+          (className ? ' ' + className : '') +
+          (open ? ' open' : '') +
+          (orientation ? ' ' + orientation : '')
+        }
         ref={e => (this.rootElement = e as HTMLDivElement)}
       >
         {anchor}
@@ -54,6 +63,20 @@ class Popup extends React.Component<PopupProps> {
         this.props.onCloseRequested()
       }
     }
+  }
+
+  private checkOrientation = () => {
+    const bounds = this.rootElement.getBoundingClientRect()
+    const noSpaceRight = window.innerWidth - bounds.right < RIGHT_THRESHOLD
+    const noSpaceBelow = window.innerHeight - bounds.bottom < BOTTOM_THRESHOLD
+    if (noSpaceRight && noSpaceBelow) {
+      return 'left above'
+    } else if (noSpaceRight) {
+      return 'left'
+    } else if (noSpaceBelow) {
+      return 'above'
+    }
+    return null
   }
 }
 
