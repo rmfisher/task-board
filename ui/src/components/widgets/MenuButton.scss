@@ -2,36 +2,21 @@
 @import '../app/Mixins.scss';
 
 .menu-button-container {
-  position: relative;
-
-  .menu-anchor {
-    position: absolute;
-    top: 0;
-    right: 0;
+  .popup-content {
+    padding: 6px 0;
   }
 
-  .menu-content {
-    z-index: 1000;
-    position: absolute;
+  .menu-item {
     display: flex;
-    flex-direction: column;
-    background-color: white;
-    padding: 6px 0;
-    border-radius: 4px;
-    box-shadow: $shadow-3;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 25px 8px 20px;
+    border-radius: 0;
 
-    .menu-item {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 8px 25px 8px 20px;
-      border-radius: 0;
-
-      &:hover,
-      &:active,
-      &:focus {
-        background-color: $white-hover-2;
-      }
+    &:hover,
+    &:active,
+    &:focus {
+      background-color: $white-hover-2;
     }
   }
 }

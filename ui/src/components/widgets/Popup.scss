@@ -1,0 +1,22 @@
+@import '../app/Variables.scss';
+@import '../app/Mixins.scss';
+
+.popup-container {
+  position: relative;
+
+  .popup-positioner {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  .popup-content {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: $shadow-3;
+  }
+}
