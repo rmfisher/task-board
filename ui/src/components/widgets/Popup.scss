@@ -20,7 +20,7 @@
     box-shadow: $shadow-3;
   }
 
-  &.left {
+  &.overflow-right {
     .popup-positioner {
       right: unset;
       left: 0;
@@ -31,7 +31,7 @@
     }
   }
 
-  &.above {
+  &.overflow-below {
     .popup-positioner {
       top: unset;
       bottom: 0;

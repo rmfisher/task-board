@@ -1,19 +1,23 @@
 import React from 'react'
 import './Popup.scss'
 
-const RIGHT_THRESHOLD = 110
-const BOTTOM_THRESHOLD = 150
+const THRESHOLD_PADDING = 10
 
 interface PopupProps {
   className: string
   open: boolean
-  onCloseRequested: () => void
   anchor: React.ReactNode
   children: React.ReactNode | React.ReactNodeArray
+  onCloseRequested: () => void
 }
 
-class Popup extends React.Component<PopupProps> {
-  private rootElement!: HTMLDivElement
+interface PopupState {
+  orientation: string | null
+}
+
+class Popup extends React.PureComponent<PopupProps, PopupState> {
+  public readonly state = { orientation: null }
+  private rootElementRef: React.RefObject<HTMLDivElement> = React.createRef()
 
   public componentDidMount() {
     document.addEventListener('mousedown', this.handleDocumentMouseDown, true)
@@ -27,7 +31,7 @@ class Popup extends React.Component<PopupProps> {
 
   public render() {
     const { className, anchor, open, children } = this.props
-    const orientation = open ? this.checkOrientation() : null
+    const { orientation } = this.state
     return (
       <div
         className={
@@ -36,12 +40,14 @@ class Popup extends React.Component<PopupProps> {
           (open ? ' open' : '') +
           (orientation ? ' ' + orientation : '')
         }
-        ref={e => (this.rootElement = e as HTMLDivElement)}
+        ref={this.rootElementRef}
       >
         {anchor}
         {open && children && (
           <div className="popup-positioner">
-            <div className="popup-content">{children}</div>
+            <div className="popup-content" ref={this.handlePopupChange}>
+              {children}
+            </div>
           </div>
         )}
       </div>
@@ -49,7 +55,8 @@ class Popup extends React.Component<PopupProps> {
   }
 
   private handleDocumentMouseDown = (e: MouseEvent) => {
-    if (this.props.open && e.target instanceof Node && !this.rootElement.contains(e.target)) {
+    const rootElement = this.rootElementRef.current
+    if (rootElement && this.props.open && e.target instanceof Node && !rootElement.contains(e.target)) {
       this.props.onCloseRequested()
     }
   }
@@ -58,25 +65,34 @@ class Popup extends React.Component<PopupProps> {
     if (this.props.open) {
       const escape = e.key === 'Escape' || e.keyCode === 27
       const enter = e.key === 'Enter' || e.keyCode === 13
-      const focusInside = this.rootElement && this.rootElement.contains(document.activeElement)
+      const rootElement = this.rootElementRef.current
+      const focusInside = rootElement && rootElement.contains(document.activeElement)
       if (escape || (enter && !focusInside)) {
         this.props.onCloseRequested()
       }
     }
   }
 
-  private checkOrientation = () => {
-    const bounds = this.rootElement.getBoundingClientRect()
-    const noSpaceRight = window.innerWidth - bounds.right < RIGHT_THRESHOLD
-    const noSpaceBelow = window.innerHeight - bounds.bottom < BOTTOM_THRESHOLD
-    if (noSpaceRight && noSpaceBelow) {
-      return 'left above'
-    } else if (noSpaceRight) {
-      return 'left'
-    } else if (noSpaceBelow) {
-      return 'above'
+  private checkOrientation = (contentWidth: number, contentHeight: number) => {
+    const rootElement = this.rootElementRef.current
+    if (rootElement) {
+      const bounds = rootElement.getBoundingClientRect()
+      const overflowRight = window.innerWidth - bounds.right < contentWidth + THRESHOLD_PADDING
+      const overflowBelow = window.innerHeight - bounds.bottom < contentHeight + THRESHOLD_PADDING
+      if (overflowRight && overflowBelow) {
+        return 'overflow-right overflow-below'
+      } else if (overflowRight) {
+        return 'overflow-right'
+      } else if (overflowBelow) {
+        return 'overflow-below'
+      }
     }
     return null
+  }
+
+  private handlePopupChange = (e: HTMLDivElement | null) => {
+    const orientation = e ? this.checkOrientation(e.scrollWidth, e.scrollHeight) : null
+    this.setState({ orientation })
   }
 }
 
